@@ -1,16 +1,13 @@
 import Link from "next/link";
-import type { Session } from "next-auth";
 
 import { buttonVariants } from "@/components/ui/button";
 
 import { Rocket } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { getCurrentSession } from "@/lib/session";
 
-type Props = {
-  session: Session | null;
-};
-
-const MarketingHeader = ({ session }: Props) => {
+const MarketingHeader = async () => {
+  const session = await getCurrentSession();
   return (
     <header className="container py-4 sm:py-8 flex justify-between items-center">
       <div className="flex gap-2 items-center">
