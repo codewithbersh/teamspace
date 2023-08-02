@@ -1,5 +1,6 @@
 "use client";
 
+import ModalProvider from "./modal-provider";
 import SessionProvider from "./session-provider";
 
 type Props = {
@@ -7,7 +8,12 @@ type Props = {
 };
 
 const Providers = ({ children }: Props) => {
-  return <SessionProvider>{children}</SessionProvider>;
+  return (
+    <SessionProvider>
+      {children}
+      <ModalProvider />
+    </SessionProvider>
+  );
 };
 
 export default Providers;

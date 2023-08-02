@@ -1,17 +1,20 @@
-import { redirect } from "next/navigation";
+"use client";
 
-import LogoutBtn from "@/components/logoutbtn";
+import { useEffect } from "react";
 
-import { getCurrentSession } from "@/lib/session";
+import { useTeamSpaceModal } from "@/hooks/use-teamspace-modal";
 
-const DashboardPage = async () => {
-  const session = await getCurrentSession();
-  if (!session) redirect("/login");
-  return (
-    <div>
-      <LogoutBtn />
-    </div>
-  );
+const DashboardPage = () => {
+  const onOpen = useTeamSpaceModal((state) => state.onOpen);
+  const isOpen = useTeamSpaceModal((state) => state.isOpen);
+
+  useEffect(() => {
+    if (!isOpen) {
+      onOpen();
+    }
+  }, [isOpen, onOpen]);
+
+  return <></>;
 };
 
 export default DashboardPage;
