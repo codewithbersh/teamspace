@@ -75,4 +75,7 @@
   body {
     @apply bg-background text-foreground;
   }
+  .container {
+    @apply !max-w-7xl px-4 sm:px-8 mx-auto;
+  }
 }
