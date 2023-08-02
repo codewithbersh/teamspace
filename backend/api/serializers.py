@@ -10,16 +10,12 @@ class UserSerializer(ModelSerializer):
 
 
 class TeamSpaceSerializer(ModelSerializer):
-    user = UserSerializer()
-
     class Meta:
         model = TeamSpace
         fields = "__all__"
 
 
 class MemberSerializer(ModelSerializer):
-    user = UserSerializer()
-
     class Meta:
         model = Member
         fields = "__all__"

@@ -2,9 +2,25 @@ export type BackendSession = {
   access: string;
   refresh: string;
   user: {
-    id: string;
+    pk: string;
     email: string;
     first_name: string;
     last_name: string;
   };
+};
+
+export type TeamSpace = {
+  id: string;
+  created_by: string;
+  name: string;
+  code: string;
+};
+
+export type Member = {
+  id: string;
+  role: "NA" | "SU" | "AD";
+  is_verified: boolean;
+  nickname: string | null;
+  team_space: string;
+  user: string;
 };

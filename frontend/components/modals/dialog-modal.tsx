@@ -9,8 +9,8 @@ import {
 } from "@/components/ui/dialog";
 
 type Props = {
-  title: string;
-  description: string;
+  title?: string;
+  description?: string;
   isOpen: boolean;
   onClose: () => void;
   children?: React.ReactNode;

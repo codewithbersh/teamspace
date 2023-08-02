@@ -1,6 +1,7 @@
 "use client";
 
 import ModalProvider from "./modal-provider";
+import MyQueryClientProvider from "./queryclient-provider";
 import SessionProvider from "./session-provider";
 
 type Props = {
@@ -10,8 +11,10 @@ type Props = {
 const Providers = ({ children }: Props) => {
   return (
     <SessionProvider>
-      {children}
-      <ModalProvider />
+      <MyQueryClientProvider>
+        {children}
+        <ModalProvider />
+      </MyQueryClientProvider>
     </SessionProvider>
   );
 };
