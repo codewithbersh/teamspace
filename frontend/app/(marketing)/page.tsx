@@ -1,5 +1,6 @@
-import MarketingHeader from "@/components/marketing/marketing-header";
 import { getCurrentSession } from "@/lib/session";
+
+import MarketingHeader from "@/components/marketing/marketing-header";
 
 const MarketingPage = async () => {
   const session = await getCurrentSession();
