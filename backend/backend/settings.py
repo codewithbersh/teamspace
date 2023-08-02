@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     "allauth.socialaccount.providers.google",
     "accounts",
     "corsheaders",
+    "api",
 ]
 
 AUTH_USER_MODEL = "accounts.User"
