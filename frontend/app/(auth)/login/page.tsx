@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-import UserAuthForm from "@/components/auth/user-auth-form";
+import { UserAuthForm } from "@/components/auth/user-auth-form";
 import { buttonVariants } from "@/components/ui/button";
 
 import { ChevronLeft } from "lucide-react";

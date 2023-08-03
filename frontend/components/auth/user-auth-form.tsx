@@ -127,4 +127,4 @@ const UserAuthForm = () => {
   );
 };
 
-export default UserAuthForm;
+export { UserAuthForm };

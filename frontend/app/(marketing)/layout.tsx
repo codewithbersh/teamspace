@@ -1,4 +1,4 @@
-import MarketingHeader from "@/components/marketing/marketing-header";
+import { MarketingHeader } from "@/components/marketing/marketing-header";
 
 type Props = {
   children: React.ReactNode;

@@ -41,4 +41,4 @@ const DialogModal = ({
   );
 };
 
-export default DialogModal;
+export { DialogModal };

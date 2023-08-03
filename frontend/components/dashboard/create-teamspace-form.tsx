@@ -30,7 +30,7 @@ import { useTeamSpaceModal } from "@/hooks/use-teamspace-modal";
 type FormType = z.infer<typeof teamSpaceSchema>;
 type Props = {};
 
-const TeamSpaceForm = ({}: Props) => {
+const CreateTeamSpaceForm = ({}: Props) => {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const teamSpaceModal = useTeamSpaceModal();
@@ -147,4 +147,4 @@ const TeamSpaceForm = ({}: Props) => {
   );
 };
 
-export default TeamSpaceForm;
+export { CreateTeamSpaceForm };

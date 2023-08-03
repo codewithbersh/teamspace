@@ -1,11 +1,11 @@
 "use client";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import DialogModal from "./dialog-modal";
+import { DialogModal } from "./dialog-modal";
 
 import { useTeamSpaceModal } from "@/hooks/use-teamspace-modal";
 
-import TeamSpaceForm from "@/components/dashboard/teamspace-form";
+import { CreateTeamSpaceForm } from "@/components/dashboard/create-teamspace-form";
 
 const TeamSpaceModal = () => {
   const teamSpaceModal = useTeamSpaceModal();
@@ -24,7 +24,7 @@ const TeamSpaceModal = () => {
           </TabsTrigger>
         </TabsList>
         <TabsContent value="create" className="!ring-0 space-y-4">
-          <TeamSpaceForm />
+          <CreateTeamSpaceForm />
         </TabsContent>
         <TabsContent value="join">Change your password here.</TabsContent>
       </Tabs>

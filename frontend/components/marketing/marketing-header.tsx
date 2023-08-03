@@ -31,4 +31,4 @@ const MarketingHeader = async () => {
   );
 };
 
-export default MarketingHeader;
+export { MarketingHeader };
