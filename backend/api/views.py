@@ -5,6 +5,10 @@ from .models import TeamSpace, Member
 from .serializers import TeamSpaceSerializer, MemberSerializer, UserSerializer
 from django.shortcuts import get_object_or_404
 from rest_framework.exceptions import PermissionDenied
+from django.core.exceptions import ObjectDoesNotExist
+from rest_framework.response import Response
+from rest_framework import status
+from django.db import IntegrityError
 
 
 class UserViewSet(ModelViewSet):
@@ -37,7 +41,36 @@ class TeamSpaceViewSet(ModelViewSet):
         return team_space
 
 
+from django.core.exceptions import ObjectDoesNotExist
+from rest_framework.response import Response
+from rest_framework import status
+
+
 class MemberViewSet(ModelViewSet):
     queryset = Member.objects.all()
     serializer_class = MemberSerializer
     permission_classes = [IsAuthenticated]
+
+    def create(self, request, *args, **kwargs):
+        try:
+            team_space = TeamSpace.objects.get(code=request.data["code"])
+            user = User.objects.get(id=request.data["user"])
+
+            new_member = Member.objects.create(team_space=team_space, user=user)
+
+            serializer = self.get_serializer(new_member)
+
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        except ObjectDoesNotExist:
+            return Response(
+                {"error": "The provided team space code does not exist."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        except IntegrityError:
+            return Response(
+                {"error": "Your request has already been submitted"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)

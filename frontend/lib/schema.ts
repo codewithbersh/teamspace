@@ -15,3 +15,10 @@ export const teamSpaceSchema = z.object({
       "Name can only contain letters, numbers, and space"
     ),
 });
+
+export const joinTeamSpaceSchema = z.object({
+  code: z
+    .string({ required_error: "Code is required to join a team space" })
+    .min(8, "Code should be 8 digits")
+    .max(8, "Code should be 8 digits"),
+});

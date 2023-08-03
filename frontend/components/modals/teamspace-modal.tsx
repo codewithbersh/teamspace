@@ -6,6 +6,7 @@ import { DialogModal } from "./dialog-modal";
 import { useTeamSpaceModal } from "@/hooks/use-teamspace-modal";
 
 import { CreateTeamSpaceForm } from "@/components/dashboard/create-teamspace-form";
+import { JoinTeamSpaceForm } from "@/components/dashboard/join-teamspace-form";
 
 const TeamSpaceModal = () => {
   const teamSpaceModal = useTeamSpaceModal();
@@ -26,7 +27,9 @@ const TeamSpaceModal = () => {
         <TabsContent value="create" className="!ring-0 space-y-4">
           <CreateTeamSpaceForm />
         </TabsContent>
-        <TabsContent value="join">Change your password here.</TabsContent>
+        <TabsContent value="join" className="!ring-0 space-y-4">
+          <JoinTeamSpaceForm />
+        </TabsContent>
       </Tabs>
     </DialogModal>
   );
