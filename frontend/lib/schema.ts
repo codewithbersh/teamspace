@@ -11,7 +11,7 @@ export const teamSpaceSchema = z.object({
       "Name can't have two or more consecutive spaces"
     )
     .refine(
-      (name) => /^[\w ]+$/.test(name),
+      (name) => /^[\w -]+$/.test(name),
       "Name can only contain letters, numbers, and space"
     ),
 });

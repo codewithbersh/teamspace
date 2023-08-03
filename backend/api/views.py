@@ -9,6 +9,9 @@ from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.response import Response
 from rest_framework import status
 from django.db import IntegrityError
+from django.core.exceptions import ObjectDoesNotExist
+from rest_framework.response import Response
+from rest_framework import status
 
 
 class UserViewSet(ModelViewSet):
@@ -40,10 +43,22 @@ class TeamSpaceViewSet(ModelViewSet):
 
         return team_space
 
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
 
-from django.core.exceptions import ObjectDoesNotExist
-from rest_framework.response import Response
-from rest_framework import status
+        Member.objects.create(
+            team_space=TeamSpace.objects.get(id=serializer.data["id"]),
+            user=request.user,
+            role="SU",
+            is_verified=True,
+        )
+
+        return Response(
+            serializer.data, status=status.HTTP_201_CREATED, headers=headers
+        )
 
 
 class MemberViewSet(ModelViewSet):

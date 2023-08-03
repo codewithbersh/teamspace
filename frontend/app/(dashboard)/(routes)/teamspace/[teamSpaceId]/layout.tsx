@@ -1,5 +1,7 @@
 import { redirect } from "next/navigation";
 
+import { Navbar } from "@/components/dashboard/navbar";
+
 import { getTeamSpace } from "@/lib/axios/teamspace";
 import { getCurrentSession } from "@/lib/session";
 
@@ -25,7 +27,12 @@ const DashboardLayout = async ({
 
   if (!teamspace) redirect("/teamspace");
 
-  return <section>{children}</section>;
+  return (
+    <section>
+      <Navbar />
+      {children}
+    </section>
+  );
 };
 
 export default DashboardLayout;
