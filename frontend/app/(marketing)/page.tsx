@@ -1,8 +1,11 @@
-import { getCurrentSession } from "@/lib/session";
+import LogoutBtn from "@/components/logoutbtn";
 
 const MarketingPage = async () => {
-  const session = await getCurrentSession();
-  return <div></div>;
+  return (
+    <div>
+      <LogoutBtn />
+    </div>
+  );
 };
 
 export default MarketingPage;

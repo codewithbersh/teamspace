@@ -69,6 +69,8 @@ const TeamSpaceForm = ({}: Props) => {
       {
         onSuccess: (values) => {
           setIsLoading(false);
+          queryClient.invalidateQueries({ queryKey: ["teamspaces"] });
+
           if (!values) {
             toast({
               title: "Uh oh! Something went wrong.",
@@ -86,9 +88,7 @@ const TeamSpaceForm = ({}: Props) => {
             });
 
             form.reset();
-            toast({
-              description: "Team Space created successfully.",
-            });
+            window.location.assign(`/teamspace/${values.id}`);
           }
         },
       }

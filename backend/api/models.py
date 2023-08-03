@@ -11,6 +11,10 @@ class TeamSpace(models.Model):
     )
     name = models.CharField(max_length=12)
     code = models.CharField(max_length=8, blank=True, unique=True)
+    created_on = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_on"]
 
     def __str__(self):
         return self.name
@@ -45,12 +49,14 @@ class Member(models.Model):
     role = models.CharField(max_length=2, choices=ROLE_CHOICES, default="NA")
     is_verified = models.BooleanField(default=False, blank=True)
     nickname = models.CharField(max_length=16, blank=True, null=True)
+    date_joined = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         unique_together = (
             "team_space",
             "user",
         )
+        ordering = ["-date_joined"]
 
     def __str__(self):
         return f"{self.user.email} joined {self.team_space.name}"

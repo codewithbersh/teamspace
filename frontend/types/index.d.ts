@@ -14,6 +14,7 @@ export type TeamSpace = {
   created_by: string;
   name: string;
   code: string;
+  created_on: Date;
 };
 
 export type Member = {

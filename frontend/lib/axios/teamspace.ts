@@ -1,6 +1,7 @@
 import { isAxiosError } from "axios";
 import { axiosApi } from "./axios";
-import { BackendSession, TeamSpace } from "@/types";
+
+import { TeamSpace } from "@/types";
 
 type CreateTeamSpaceProps = {
   access: string | undefined;
@@ -25,6 +26,61 @@ export const createTeamSpace = async ({
         },
       }
     );
+    return data;
+  } catch (error) {
+    if (isAxiosError(error)) {
+      console.log("error message createTeamSpace: ", error.message);
+      return null;
+    } else {
+      console.log("unexpected error createTeamSpace: ", error);
+      return null;
+    }
+  }
+};
+
+type GetTeamSpacesProps = {
+  access: string;
+};
+
+export const getTeamSpaces = async ({ access }: GetTeamSpacesProps) => {
+  try {
+    const { data } = await axiosApi.get<TeamSpace[]>(`teamspace/`, {
+      headers: {
+        Authorization: `Bearer ${access}`,
+      },
+    });
+
+    return data;
+  } catch (error) {
+    if (isAxiosError(error)) {
+      console.log("error message createTeamSpace: ", error.message);
+      return null;
+    } else {
+      console.log("unexpected error createTeamSpace: ", error);
+      return null;
+    }
+  }
+};
+
+type GetTeamSpaceProps = {
+  access: string;
+  teamSpaceId: string;
+};
+
+export const getTeamSpace = async ({
+  access,
+  teamSpaceId,
+}: GetTeamSpaceProps) => {
+  try {
+    const { data } = await axiosApi.get<TeamSpace>(
+      `teamspace/${teamSpaceId}/`,
+      {
+        headers: {
+          Authorization: `Bearer ${access}`,
+        },
+      }
+    );
+
     return data;
   } catch (error) {
     if (isAxiosError(error)) {

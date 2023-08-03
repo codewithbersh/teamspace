@@ -26,7 +26,6 @@ export const createMember = async ({ access, member }: CreateMemberProps) => {
     );
     return data;
   } catch (error) {
-    console.log(error);
     if (isAxiosError(error)) {
       console.log("error message createMember: ", error.message);
       return null;
