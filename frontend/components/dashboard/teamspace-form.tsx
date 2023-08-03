@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { redirect } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -20,15 +21,19 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
+import { Loader2 } from "lucide-react";
 import { teamSpaceSchema } from "@/lib/schema";
 import { createTeamSpace } from "@/lib/axios/teamspace";
 import { createMember } from "@/lib/axios/member";
+import { useTeamSpaceModal } from "@/hooks/use-teamspace-modal";
 
 type FormType = z.infer<typeof teamSpaceSchema>;
 type Props = {};
 
 const TeamSpaceForm = ({}: Props) => {
   const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
+  const teamSpaceModal = useTeamSpaceModal();
 
   const { data: session } = useSession();
   const queryClient = useQueryClient();
@@ -50,6 +55,7 @@ const TeamSpaceForm = ({}: Props) => {
   });
 
   function onSubmit(values: FormType) {
+    setIsLoading(true);
     if (!session) redirect("/login");
 
     newTeamSpace(
@@ -62,6 +68,7 @@ const TeamSpaceForm = ({}: Props) => {
       },
       {
         onSuccess: (values) => {
+          setIsLoading(false);
           if (!values) {
             toast({
               title: "Uh oh! Something went wrong.",
@@ -76,6 +83,11 @@ const TeamSpaceForm = ({}: Props) => {
                 role: "SU",
                 is_verified: true,
               },
+            });
+
+            form.reset();
+            toast({
+              description: "Team Space created successfully.",
             });
           }
         },
@@ -102,14 +114,33 @@ const TeamSpaceForm = ({}: Props) => {
               <FormItem>
                 <FormLabel>Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter a team space name" {...field} />
+                  <Input
+                    placeholder="Enter a team space name"
+                    {...field}
+                    disabled={isLoading}
+                  />
                 </FormControl>
                 <FormDescription>You can change this later</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <Button type="submit">Create team space</Button>
+          <div className="flex justify-end gap-4 w-full">
+            <Button
+              variant="outline"
+              type="button"
+              onClick={() => teamSpaceModal.onClose()}
+              disabled={isLoading}
+            >
+              Cancel
+            </Button>
+            <Button type="submit" disabled={isLoading} className="gap-[6px]">
+              {isLoading && (
+                <Loader2 className="w-[14px] h-[14px] animate-spin" />
+              )}
+              {isLoading ? "Creating" : "Create"}
+            </Button>
+          </div>
         </form>
       </Form>
     </>
