@@ -1,5 +1,5 @@
-const TeamSpacePage = () => {
-  return <div>page</div>;
+const OverviewPage = () => {
+  return <div>overview</div>;
 };
 
-export default TeamSpacePage;
+export default OverviewPage;

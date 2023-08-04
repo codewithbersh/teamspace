@@ -60,6 +60,14 @@ class TeamSpaceViewSet(ModelViewSet):
             serializer.data, status=status.HTTP_201_CREATED, headers=headers
         )
 
+    def destroy(self, request, *args, **kwargs):
+        team_space = self.get_object()
+
+        if team_space.created_by != request.user:
+            raise PermissionDenied("You are not authorized to delete this team space.")
+
+        return super().destroy(request, *args, **kwargs)
+
 
 class MemberViewSet(ModelViewSet):
     queryset = Member.objects.all()

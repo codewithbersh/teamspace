@@ -53,10 +53,10 @@ export const getTeamSpaces = async ({ access }: GetTeamSpacesProps) => {
     return data;
   } catch (error) {
     if (isAxiosError(error)) {
-      console.log("error message createTeamSpace: ", error.message);
+      console.log("error message getTeamSpaces: ", error.message);
       return null;
     } else {
-      console.log("unexpected error createTeamSpace: ", error);
+      console.log("unexpected error getTeamSpaces: ", error);
       return null;
     }
   }
@@ -84,10 +84,72 @@ export const getTeamSpace = async ({
     return data;
   } catch (error) {
     if (isAxiosError(error)) {
-      console.log("error message createTeamSpace: ", error.message);
+      console.log("error message getTeamSpace: ", error.message);
       return null;
     } else {
-      console.log("unexpected error createTeamSpace: ", error);
+      console.log("unexpected error getTeamSpace: ", error);
+      return null;
+    }
+  }
+};
+
+type UpdateTeamSpaceProps = {
+  access: string;
+  teamSpaceId: string;
+  name: string;
+};
+
+export const updateTeamSpace = async ({
+  access,
+  teamSpaceId,
+  name,
+}: UpdateTeamSpaceProps) => {
+  try {
+    const { data } = await axiosApi.patch<TeamSpace>(
+      `teamspace/${teamSpaceId}/`,
+      {
+        name,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${access}`,
+        },
+      }
+    );
+    return data;
+  } catch (error) {
+    if (isAxiosError(error)) {
+      console.log("error message updateTeamSpace: ", error.message);
+      return null;
+    } else {
+      console.log("unexpected error updateTeamSpace: ", error);
+      return null;
+    }
+  }
+};
+
+type DeleteTeamSpaceProps = {
+  access: string;
+  teamSpaceId: string;
+};
+
+export const deleteTeamSpace = async ({
+  access,
+  teamSpaceId,
+}: DeleteTeamSpaceProps) => {
+  try {
+    const { status } = await axiosApi.delete(`teamspace/${teamSpaceId}/`, {
+      headers: {
+        Authorization: `Bearer ${access}`,
+      },
+    });
+    return status;
+  } catch (error) {
+    if (isAxiosError(error)) {
+      console.log("error message updateTeamSpace: ", error.message);
+      return null;
+    } else {
+      console.log("unexpected error updateTeamSpace: ", error);
       return null;
     }
   }

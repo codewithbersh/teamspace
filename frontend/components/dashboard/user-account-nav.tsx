@@ -5,7 +5,6 @@ import { useParams, usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 import type { Session } from "next-auth";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,6 +13,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import { User } from "lucide-react";
 
@@ -31,6 +31,11 @@ const UserAccountNav = ({ session }: Props) => {
       href: `/teamspace/${params.teamSpaceId}/tickets`,
       label: "Tickets",
       active: pathname === `/teamspace/${params.teamSpaceId}/tickets`,
+    },
+    {
+      href: `/teamspace/${params.teamSpaceId}/settings`,
+      label: "Settings",
+      active: pathname === `/teamspace/${params.teamSpaceId}/settings`,
     },
   ];
 

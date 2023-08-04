@@ -14,6 +14,11 @@ const MainNav = () => {
       label: "Tickets",
       active: pathname === `/teamspace/${params.teamSpaceId}/tickets`,
     },
+    {
+      href: `/teamspace/${params.teamSpaceId}/settings`,
+      label: "Settings",
+      active: pathname === `/teamspace/${params.teamSpaceId}/settings`,
+    },
   ];
   return (
     <nav className="items-center space-x-4 lg:space-x-6 ml-6 hidden sm:flex">

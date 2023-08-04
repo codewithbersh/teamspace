@@ -20,9 +20,9 @@ import {
 } from "@/components/ui/command";
 
 import { cn } from "@/lib/utils";
+import { TeamSpace } from "@/types";
 import { Check, ChevronsUpDown, PlusCircle, Rocket } from "lucide-react";
 import { useTeamSpaceModal } from "@/hooks/use-teamspace-modal";
-import { TeamSpace } from "@/types";
 
 type PopoverTriggerProps = React.ComponentProps<typeof PopoverTrigger>;
 
@@ -44,6 +44,7 @@ const TeamSwitcher = ({ className, teamSpaces = [] }: Props) => {
     setOpen(false);
     router.push(`/teamspace/${teamSpace.id}`);
   };
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
