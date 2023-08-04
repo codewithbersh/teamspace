@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import type { Session } from "next-auth";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -29,10 +30,10 @@ type FormType = z.infer<typeof teamSpaceSchema>;
 
 type Props = {
   teamSpace: TeamSpace;
-  access: string;
+  session: Session;
 };
 
-const TeamSpaceSettings = ({ teamSpace, access }: Props) => {
+const TeamSpaceSettings = ({ teamSpace, session }: Props) => {
   const router = useRouter();
   const { toast } = useToast();
   const { mutate } = useMutation({
@@ -51,7 +52,11 @@ const TeamSpaceSettings = ({ teamSpace, access }: Props) => {
 
   function onSubmit(values: FormType) {
     mutate(
-      { access: access, teamSpaceId: teamSpace.id, name: values.name },
+      {
+        access: session.user.backendSession.access,
+        teamSpaceId: teamSpace.id,
+        name: values.name,
+      },
       {
         onSuccess: (formValues) => {
           if (formValues) {
@@ -72,6 +77,16 @@ const TeamSpaceSettings = ({ teamSpace, access }: Props) => {
       }
     );
   }
+
+  if (session.user.backendSession.user.pk !== teamSpace.created_by)
+    return (
+      <div className="space-y-2">
+        <h1 className=" font-medium text-lg leading-none">Permission Denied</h1>
+        <p className="text-muted-foreground">
+          You don't have enough permission to access this page
+        </p>
+      </div>
+    );
 
   return (
     <div className="max-w-[400px] space-y-8">
@@ -107,7 +122,10 @@ const TeamSpaceSettings = ({ teamSpace, access }: Props) => {
           </p>
         </div>
 
-        <DeleteTeamSpaceDialog access={access} teamSpaceId={teamSpace.id} />
+        <DeleteTeamSpaceDialog
+          access={session.user.backendSession.access}
+          teamSpaceId={teamSpace.id}
+        />
       </div>
     </div>
   );

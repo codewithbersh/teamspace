@@ -22,8 +22,6 @@ const SettingsPage = async ({ params: { teamSpaceId } }: Props) => {
     teamSpaceId: teamSpaceId,
   });
   if (!teamSpace) redirect("/teamspace");
-  const isSuperUser =
-    session.user.backendSession.user.pk === teamSpace.created_by;
   return (
     <div className="container space-y-12">
       <PageHeader
@@ -35,17 +33,12 @@ const SettingsPage = async ({ params: { teamSpaceId } }: Props) => {
         <TabsList>
           <TabsTrigger value="tickets">Tickets</TabsTrigger>
           <TabsTrigger value="activities">Activities</TabsTrigger>
-          {isSuperUser && (
-            <TabsTrigger value="teamspace">Team Space</TabsTrigger>
-          )}
+          <TabsTrigger value="teamspace">Team Space</TabsTrigger>
         </TabsList>
         <TabsContent value="tickets">Tickets</TabsContent>
         <TabsContent value="activities">Activities</TabsContent>
         <TabsContent value="teamspace">
-          <TeamSpaceSettings
-            teamSpace={teamSpace}
-            access={session.user.backendSession.access}
-          />
+          <TeamSpaceSettings teamSpace={teamSpace} session={session} />
         </TabsContent>
       </Tabs>
 
