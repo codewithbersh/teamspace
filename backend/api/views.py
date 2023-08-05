@@ -1,8 +1,14 @@
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 from rest_framework.permissions import IsAuthenticated
 from accounts.models import User
-from .models import TeamSpace, Member
-from .serializers import TeamSpaceSerializer, MemberSerializer, UserSerializer
+from .models import TeamSpace, Member, Ticket
+from .serializers import (
+    TeamSpaceSerializer,
+    MemberSerializer,
+    UserSerializer,
+    TicketSerializer,
+    GetMemberSerializer,
+)
 from django.shortcuts import get_object_or_404
 from rest_framework.exceptions import PermissionDenied
 from django.core.exceptions import ObjectDoesNotExist
@@ -97,3 +103,42 @@ class MemberViewSet(ModelViewSet):
             )
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class TicketViewSet(ModelViewSet):
+    queryset = Ticket.objects.all()
+    serializer_class = TicketSerializer
+    permission_classes = [IsAuthenticated]
+
+    # def create(self, request, *args, **kwargs):
+    #     user = request.user
+    #     team_space = TeamSpace.objects.get(id=request.data.get("team_space"))
+
+    #     member = Member.objects.filter(
+    #         user=user, team_space=team_space, role__in=["SU", "AD"]
+    #     ).first()
+
+    #     if member:
+    #         return super().create(request, *args, **kwargs)
+    #     else:
+    #         return Response(
+    #             {"detail": "Only superuser and admin can create a ticket."},
+    #             status=status.HTTP_403_FORBIDDEN,
+    #         )
+
+
+class GetTeamSpaceMembersViewSet(ReadOnlyModelViewSet):
+    serializer_class = GetMemberSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        team_space_id = self.kwargs.get("team_space_id", None)
+
+        if team_space_id is not None:
+            team_space = TeamSpace.objects.get(pk=team_space_id)
+            return team_space.members
+        else:
+            return Response(
+                {"detail": "TeamSpace ID not provided."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )

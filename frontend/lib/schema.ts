@@ -22,3 +22,26 @@ export const joinTeamSpaceSchema = z.object({
     .min(8, "Code should be 8 digits")
     .max(8, "Code should be 8 digits"),
 });
+
+const assigneeSchema = z.object({
+  value: z.string(),
+  label: z.string(),
+});
+
+export const ticketSchema = z.object({
+  type: z.enum(["FR", "IS", "IM"], {
+    required_error: "Ticket type is required",
+  }),
+  priority: z.enum(["LW", "MD", "HI", "IM"], {
+    required_error: "Ticket priority is required",
+  }),
+  title: z
+    .string({ required_error: "Title is required" })
+    .min(8, "Title should be at least 8 characters")
+    .max(64, "Title should not exceed 64 characters")
+    .trim(),
+  description: z.string().max(512).optional(),
+  starting_date: z.date().optional().nullable(),
+  end_date: z.date().optional().nullable(),
+  assignee: z.array(z.string()).optional(),
+});

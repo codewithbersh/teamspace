@@ -1,3 +1,10 @@
+export type BackendUser = {
+  id: string;
+  email: string;
+  first_name: string;
+  last_name: string;
+};
+
 export type BackendSession = {
   access: string;
   refresh: string;
@@ -21,7 +28,29 @@ export type Member = {
   id: string;
   role: "NA" | "SU" | "AD";
   is_verified: boolean;
-  nickname: string | null;
   team_space: string;
   user: string;
+};
+
+export type User = {
+  id: string;
+  email: string;
+  first_name: string;
+  last_name: string;
+};
+
+export type Ticket = {
+  id: string;
+  team_space: TeamSpace;
+  type: "FR" | "IS" | "IM";
+  title: string;
+  description: string | undefined;
+  status: "PE" | "IP" | "CO" | "FR" | "RO";
+  priority: "LW" | "MD" | "HI" | "IM";
+  assignee: string[];
+  created_by: string[];
+  created_on: Date;
+  starting_date: Date | null | undefined;
+  end_date: Date | null | undefined;
+  archived: boolean;
 };

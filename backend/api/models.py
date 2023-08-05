@@ -48,7 +48,6 @@ class Member(models.Model):
     )
     role = models.CharField(max_length=2, choices=ROLE_CHOICES, default="NA")
     is_verified = models.BooleanField(default=False, blank=True)
-    nickname = models.CharField(max_length=16, blank=True, null=True)
     date_joined = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -60,3 +59,60 @@ class Member(models.Model):
 
     def __str__(self):
         return f"{self.user.email} joined {self.team_space.name}"
+
+
+class Ticket(models.Model):
+    TYPE_CHOICES = (
+        ("FR", "feature reqeust"),
+        ("IS", "issue"),
+        ("IM", "improvement"),
+    )
+
+    STATUS_CHOICES = (
+        ("PE", "pending"),
+        ("IP", "in progress"),
+        ("CO", "completed"),
+        ("FR", "for review"),
+        ("RO", "reopen"),
+    )
+
+    PRIORITY_CHOICES = (
+        ("LW", "low"),
+        ("MD", "medium"),
+        ("HI", "high"),
+        ("IM", "immediate"),
+    )
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    ticket_id = models.CharField(blank=True, max_length=6, unique=True)
+    team_space = models.ForeignKey(
+        TeamSpace, on_delete=models.CASCADE, related_name="tickets"
+    )
+    type = models.CharField(max_length=2, choices=TYPE_CHOICES, default="IS")
+    title = models.CharField(max_length=64)
+    description = models.TextField(max_length=512, blank=True, null=True)
+    status = models.CharField(max_length=2, choices=STATUS_CHOICES, default="PE")
+    priority = models.CharField(max_length=2, choices=PRIORITY_CHOICES, default="MD")
+    assignee = models.ManyToManyField(User, related_name="assigned_tickets", blank=True)
+    created_by = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="created_tickets"
+    )
+    created_on = models.DateTimeField(auto_now_add=True)
+    starting_date = models.DateField(blank=True, null=True)
+    end_date = models.DateField(blank=True, null=True)
+    archived = models.BooleanField(default=False)
+
+    def save(self, *args, **kwargs):
+        if not self.ticket_id:
+            self.ticket_id = self.generate_unique_ticket_id()
+        super().save(*args, **kwargs)
+
+    def generate_unique_ticket_id(self):
+        length = 6
+        while True:
+            ticket_id = get_random_string(length).upper()
+            if not Ticket.objects.filter(ticket_id=ticket_id).exists():
+                return ticket_id
+
+    def __str__(self):
+        return self.ticket_id

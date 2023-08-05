@@ -1,7 +1,7 @@
 import { isAxiosError } from "axios";
 import { axiosApi } from "./axios";
 
-import { Member } from "@/types";
+import { BackendUser, Member } from "@/types";
 
 type JoinTeamSpaceError = {
   error: string;
@@ -37,6 +37,38 @@ export const joinTeamSpace = async ({
     if (isAxiosError(error)) {
       const res = error.response?.data as JoinTeamSpaceError;
       return res;
+    }
+    console.log("error: ", error);
+    return null;
+  }
+};
+
+type GetTeamSpaceMembersProps = {
+  access: string;
+  teamSpaceId: string;
+};
+
+export type GetMembersType = Omit<Member, "user"> & { user: BackendUser };
+
+export const getTeamSpaceMembers = async ({
+  access,
+  teamSpaceId,
+}: GetTeamSpaceMembersProps) => {
+  try {
+    const { data } = await axiosApi.get<GetMembersType[]>(
+      `teamspace/${teamSpaceId}/members/`,
+      {
+        headers: {
+          Authorization: `Bearer ${access}`,
+        },
+      }
+    );
+
+    return data;
+  } catch (error) {
+    if (isAxiosError(error)) {
+      console.log("error message updateTeamSpace: ", error.message);
+      return null;
     }
     console.log("error: ", error);
     return null;
