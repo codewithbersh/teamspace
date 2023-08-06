@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { ticketSchema } from "@/lib/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
@@ -40,6 +41,7 @@ import { GetMembersType } from "@/lib/axios/member";
 import { BackendSession, Ticket } from "@/types";
 import { createTicket, updateTicket } from "@/lib/axios/ticket";
 import { format } from "date-fns";
+import { useToast } from "@/components/ui/use-toast";
 
 type FormType = z.infer<typeof ticketSchema>;
 
@@ -56,6 +58,8 @@ const TicketForm = ({
   backendSession,
   teamSpaceId,
 }: Props) => {
+  const { toast } = useToast();
+  const router = useRouter();
   const assigneeOptions = teamSpaceMembers.map((member) => ({
     value: member.user.id,
     label: member.user.email,
@@ -100,42 +104,79 @@ const TicketForm = ({
         ? assigneeNoChanges
         : values.assignee,
     };
-    console.log(newTicket);
     if (!ticket) {
-      submitNewTicket({
-        access: backendSession.access,
-        ticket: {
-          assignee: newTicket.assignee as any,
-          team_space: newTicket.team_space,
-          created_by: newTicket.created_by,
-          title: newTicket.title,
-          description: newTicket.description,
-          starting_date: newTicket.starting_date
-            ? formatDate(newTicket.starting_date)
-            : null,
-          end_date: newTicket.end_date ? formatDate(newTicket.end_date) : null,
-          priority: newTicket.priority,
-          type: newTicket.type,
+      submitNewTicket(
+        {
+          access: backendSession.access,
+          ticket: {
+            assignee: newTicket.assignee as any,
+            team_space: newTicket.team_space,
+            created_by: newTicket.created_by,
+            title: newTicket.title,
+            description: newTicket.description,
+            starting_date: newTicket.starting_date
+              ? formatDate(newTicket.starting_date)
+              : null,
+            end_date: newTicket.end_date
+              ? formatDate(newTicket.end_date)
+              : null,
+            priority: newTicket.priority,
+            type: newTicket.type,
+          },
         },
-      });
+        {
+          onSuccess: (values) => {
+            if (!values) {
+              toast({
+                title: "Uh oh! Something went wrong.",
+                description: "There was a problem with your request.",
+              });
+            } else {
+              toast({
+                description: "Ticket has been created successfully.",
+              });
+              router.push(`/teamspace/${teamSpaceId}/tickets/${values.id}`);
+            }
+          },
+        }
+      );
     } else {
-      updateTicketInfo({
-        access: backendSession.access,
-        ticket: {
-          assignee: newTicket.assignee as any,
-          team_space: newTicket.team_space,
-          created_by: newTicket.created_by,
-          title: newTicket.title,
-          description: newTicket.description,
-          starting_date: newTicket.starting_date
-            ? formatDate(newTicket.starting_date)
-            : null,
-          end_date: newTicket.end_date ? formatDate(newTicket.end_date) : null,
-          priority: newTicket.priority,
-          type: newTicket.type,
+      updateTicketInfo(
+        {
+          access: backendSession.access,
+          ticket: {
+            assignee: newTicket.assignee as any,
+            team_space: newTicket.team_space,
+            created_by: newTicket.created_by,
+            title: newTicket.title,
+            description: newTicket.description,
+            starting_date: newTicket.starting_date
+              ? formatDate(newTicket.starting_date)
+              : null,
+            end_date: newTicket.end_date
+              ? formatDate(newTicket.end_date)
+              : null,
+            priority: newTicket.priority,
+            type: newTicket.type,
+          },
+          ticketId: ticket.id,
         },
-        ticketId: ticket.id,
-      });
+        {
+          onSuccess: (values) => {
+            if (!values) {
+              toast({
+                title: "Uh oh! Something went wrong.",
+                description: "There was a problem with your request.",
+              });
+            } else {
+              toast({
+                description: "Ticket has been updated successfully.",
+              });
+              router.push(`/teamspace/${teamSpaceId}/tickets/${values.id}`);
+            }
+          },
+        }
+      );
     }
   }
 
