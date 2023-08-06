@@ -2,7 +2,11 @@ import { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 
-import { getBackendSession, getDemoBackendSession } from "./axios/user";
+import {
+  getBackendSession,
+  getDemoBackendSession,
+  updateUserInfo,
+} from "./axios/user";
 import { BackendSession } from "@/types";
 
 type CredentialsInput = {
@@ -30,7 +34,7 @@ export const authOptions: NextAuthOptions = {
   ],
 
   callbacks: {
-    async signIn({ account, credentials }) {
+    async signIn({ account, credentials, profile }) {
       if (!account) return false;
 
       if (account.provider === "google" && account.id_token) {
@@ -42,7 +46,24 @@ export const authOptions: NextAuthOptions = {
           return false;
         }
 
-        account.backendSession = backendSession;
+        const picture = (profile as any)?.picture as string | undefined;
+
+        if (!backendSession.user.image_url) {
+          const updatedUser = await updateUserInfo({
+            token: backendSession.access,
+            user: { pk: backendSession.user.pk, image_url: picture },
+          });
+
+          account.backendSession = {
+            ...backendSession,
+            user: {
+              ...backendSession.user,
+              image_url: picture,
+            },
+          };
+        } else {
+          account.backendSession = backendSession;
+        }
 
         return true;
       }

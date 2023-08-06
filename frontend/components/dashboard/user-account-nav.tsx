@@ -15,8 +15,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-import { User } from "lucide-react";
-
 type Props = {
   session: Session;
 };
@@ -43,9 +41,11 @@ const UserAccountNav = ({ session }: Props) => {
     <DropdownMenu>
       <DropdownMenuTrigger>
         <Avatar>
-          <AvatarImage src={user.image} />
-          <AvatarFallback>
-            <User />
+          <AvatarImage src={user.backendSession.user.image_url} />
+          <AvatarFallback className="bg-foreground">
+            <span className="text-lg font-bold text-accent">
+              {user.backendSession.user.email[0].toUpperCase()}
+            </span>
           </AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>

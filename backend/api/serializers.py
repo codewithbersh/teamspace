@@ -6,7 +6,7 @@ from .models import TeamSpace, Member, Ticket
 class UserSerializer(ModelSerializer):
     class Meta:
         model = User
-        fields = ["id", "email", "first_name", "last_name"]
+        fields = ["id", "email", "first_name", "last_name", "image_url"]
 
 
 class TeamSpaceSerializer(ModelSerializer):
