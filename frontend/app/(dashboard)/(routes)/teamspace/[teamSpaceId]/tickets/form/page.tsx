@@ -45,8 +45,6 @@ const TicketFormPage = async ({
 
   if (!role) redirect("/teamspace");
 
-  if (role === "NA") return <div>Not authorized</div>;
-
   const ticket = await getTicket({
     access: session.user.backendSession.access,
     ticketId,
@@ -63,12 +61,28 @@ const TicketFormPage = async ({
   return (
     <div className="container space-y-12">
       <PageHeader title={title} description={description} />
-      <TicketForm
-        teamSpaceMembers={teamSpaceMembers}
-        ticket={ticket}
-        backendSession={session.user.backendSession}
-        teamSpaceId={teamSpace.id}
-      />
+      {role === "NA" ? (
+        <>
+          <div className="space-y-2">
+            <h1 className=" font-medium text-lg leading-none">
+              Permission Denied
+            </h1>
+            <p className="text-muted-foreground">
+              Only admin can create or update a ticket. Contact your
+              administrator.
+            </p>
+          </div>
+        </>
+      ) : (
+        <>
+          <TicketForm
+            teamSpaceMembers={teamSpaceMembers}
+            ticket={ticket}
+            backendSession={session.user.backendSession}
+            teamSpaceId={teamSpace.id}
+          />
+        </>
+      )}
     </div>
   );
 };
