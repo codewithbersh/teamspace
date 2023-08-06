@@ -23,7 +23,8 @@ type Props = {
   ticket: TicketDetailed;
 };
 
-const deadline = (input: any) => format(parseISO(input), "MMMM do, yyyy");
+const deadline = (input: any) =>
+  input ? format(parseISO(input), "MMM do, yyyy") : null;
 
 const TicketInformationSummary = ({ ticket }: Props) => {
   const summary = [
@@ -53,7 +54,7 @@ const TicketInformationSummary = ({ ticket }: Props) => {
     },
   ];
   return (
-    <div className="grid sm:grid-cols-2 min-[1100px]:grid-cols-4 gap-4">
+    <div className="grid min-[580px]:grid-cols-2 min-[1112px]:grid-cols-4 gap-4">
       {summary.map((item) => (
         <Card key={item.header} className="min-w-[250px] w-full">
           <CardHeader className="space-y-2.5">

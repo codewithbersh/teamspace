@@ -81,10 +81,12 @@ const TicketForm = ({
     resolver: zodResolver(ticketSchema),
     defaultValues: {
       title: ticket?.title || "",
-      description: ticket?.description,
-      end_date: ticket ? new Date(ticket?.end_date as any) : undefined,
+      description: ticket?.description ? ticket.description : undefined,
+      end_date: ticket?.end_date
+        ? new Date(ticket?.end_date as any)
+        : undefined,
       priority: ticket?.priority,
-      starting_date: ticket
+      starting_date: ticket?.starting_date
         ? new Date(ticket?.starting_date as any)
         : undefined,
       type: ticket?.type,
@@ -135,6 +137,7 @@ const TicketForm = ({
               toast({
                 description: "Ticket has been created successfully.",
               });
+              router.refresh();
               router.push(`/teamspace/${teamSpaceId}/tickets/${values.id}`);
             }
           },
@@ -172,6 +175,7 @@ const TicketForm = ({
               toast({
                 description: "Ticket has been updated successfully.",
               });
+              router.refresh();
               router.push(`/teamspace/${teamSpaceId}/tickets/${values.id}`);
             }
           },
