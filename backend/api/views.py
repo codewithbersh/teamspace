@@ -8,6 +8,7 @@ from .serializers import (
     UserSerializer,
     TicketSerializer,
     GetMemberSerializer,
+    GetTicketInformationSerliazer,
 )
 from django.shortcuts import get_object_or_404
 from rest_framework.exceptions import PermissionDenied
@@ -110,22 +111,6 @@ class TicketViewSet(ModelViewSet):
     serializer_class = TicketSerializer
     permission_classes = [IsAuthenticated]
 
-    # def create(self, request, *args, **kwargs):
-    #     user = request.user
-    #     team_space = TeamSpace.objects.get(id=request.data.get("team_space"))
-
-    #     member = Member.objects.filter(
-    #         user=user, team_space=team_space, role__in=["SU", "AD"]
-    #     ).first()
-
-    #     if member:
-    #         return super().create(request, *args, **kwargs)
-    #     else:
-    #         return Response(
-    #             {"detail": "Only superuser and admin can create a ticket."},
-    #             status=status.HTTP_403_FORBIDDEN,
-    #         )
-
 
 class GetTeamSpaceMembersViewSet(ReadOnlyModelViewSet):
     serializer_class = GetMemberSerializer
@@ -142,3 +127,9 @@ class GetTeamSpaceMembersViewSet(ReadOnlyModelViewSet):
                 {"detail": "TeamSpace ID not provided."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
+
+
+class GetTicketInformationViewSet(ReadOnlyModelViewSet):
+    queryset = Ticket.objects.all()
+    serializer_class = GetTicketInformationSerliazer
+    permission_classes = [IsAuthenticated]

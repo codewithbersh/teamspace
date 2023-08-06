@@ -1,7 +1,7 @@
 import { axiosApi } from "./axios";
 import { isAxiosError } from "axios";
 
-import { Ticket } from "@/types";
+import { Ticket, TicketDetailed } from "@/types";
 
 type GetTicketProps = {
   access: string;
@@ -22,6 +22,35 @@ export const getTicket = async ({ access, ticketId }: GetTicketProps) => {
     if (isAxiosError(error)) {
       return error.response?.data as { detail: string };
     }
+    return null;
+  }
+};
+
+type GetTicketInformationProps = {
+  access: string;
+  ticketId: string;
+};
+
+export const getTicketInformation = async ({
+  access,
+  ticketId,
+}: GetTicketInformationProps) => {
+  try {
+    const { data } = await axiosApi.get<TicketDetailed>(
+      `ticket-information/${ticketId}/`,
+      {
+        headers: {
+          Authorization: `Bearer ${access}`,
+        },
+      }
+    );
+    return data;
+  } catch (error) {
+    if (isAxiosError(error)) {
+      console.log("Error: ", error);
+      return null;
+    }
+    console.log("Error: ", error);
     return null;
   }
 };

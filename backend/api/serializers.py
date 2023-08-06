@@ -40,3 +40,13 @@ class GetMemberSerializer(ModelSerializer):
     class Meta:
         model = Member
         fields = "__all__"
+
+
+class GetTicketInformationSerliazer(ModelSerializer):
+    assignee = UserSerializer(many=True)
+    created_by = UserSerializer()
+
+    class Meta:
+        model = Ticket
+        fields = "__all__"
+        depth = 1

@@ -41,7 +41,7 @@ export type User = {
 
 export type Ticket = {
   id: string;
-  team_space: TeamSpace;
+  team_space: string;
   type: "FR" | "IS" | "IM";
   title: string;
   description: string | undefined;
@@ -53,4 +53,13 @@ export type Ticket = {
   starting_date: Date | null | undefined;
   end_date: Date | null | undefined;
   archived: boolean;
+};
+
+export type TicketDetailed = Omit<
+  Ticket,
+  "team_space" | "assignee" | "created_by"
+> & {
+  team_space: TeamSpace;
+  assignee: User[];
+  created_by: User;
 };
