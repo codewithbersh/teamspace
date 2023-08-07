@@ -4,7 +4,7 @@ from rest_framework.serializers import (
     SerializerMethodField,
 )
 from accounts.models import User
-from .models import TeamSpace, Member, Ticket
+from .models import TeamSpace, Member, Ticket, Comment
 
 
 class UserSerializer(ModelSerializer):
@@ -56,6 +56,13 @@ class GetTicketInformationSerliazer(ModelSerializer):
         depth = 1
 
 
+class CommentSerializer(ModelSerializer):
+    class Meta:
+        model = Comment
+        fields = "__all__"
+        depth = 1
+
+
 class TeamSpaceHistorySerializer(ModelSerializer):
     created_by = UserSerializer()
     history_user = UserSerializer()
@@ -95,6 +102,18 @@ class TicketHistorySerializer(ModelSerializer):
 
     class Meta:
         model = Ticket.history.model
+        fields = "__all__"
+        depth = 1
+
+    def get_changed_fields(self, obj):
+        if hasattr(obj, "prev_record") and obj.prev_record:
+            return obj.diff_against(obj.prev_record).changed_fields
+        return []
+
+
+class CommentHistorySerializer(ModelSerializer):
+    class Meta:
+        model = Comment.history.model()
         fields = "__all__"
         depth = 1
 

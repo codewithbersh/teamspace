@@ -1,17 +1,19 @@
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 from rest_framework.permissions import IsAuthenticated
 from accounts.models import User
-from .models import TeamSpace, Member, Ticket
+from .models import TeamSpace, Member, Ticket, Comment
 from .serializers import (
     TeamSpaceSerializer,
     MemberSerializer,
     UserSerializer,
     TicketSerializer,
+    CommentSerializer,
     GetMemberSerializer,
     GetTicketInformationSerliazer,
     TeamSpaceHistorySerializer,
     MemberHistorySerliazer,
     TicketHistorySerializer,
+    CommentHistorySerializer,
 )
 from django.shortcuts import get_object_or_404
 from rest_framework.exceptions import PermissionDenied
@@ -115,6 +117,12 @@ class TicketViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
 
 
+class CommentViewSet(ModelViewSet):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    permission_classes = [IsAuthenticated]
+
+
 class GetTeamSpaceMembersViewSet(ReadOnlyModelViewSet):
     serializer_class = GetMemberSerializer
     permission_classes = [IsAuthenticated]
@@ -151,3 +159,8 @@ class MemberHistoryViewSet(ReadOnlyModelViewSet):
 class TicketHistoryViewSet(ReadOnlyModelViewSet):
     queryset = Ticket.history.all()
     serializer_class = TicketHistorySerializer
+
+
+class CommentHistoryViewSet(ReadOnlyModelViewSet):
+    queryset = Comment.history.all()
+    serializer_class = CommentHistorySerializer

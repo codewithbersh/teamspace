@@ -120,3 +120,20 @@ class Ticket(models.Model):
 
     def __str__(self):
         return self.ticket_id
+
+
+class Comment(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    member = models.ForeignKey(
+        Member, on_delete=models.CASCADE, related_name="comments"
+    )
+    ticket = models.ForeignKey(
+        Ticket, on_delete=models.CASCADE, related_name="comments"
+    )
+    description = models.CharField(max_length=60)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+    history = HistoricalRecords()
+
+    def __str__(self):
+        return self.description
