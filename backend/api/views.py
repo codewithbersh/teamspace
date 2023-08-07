@@ -9,6 +9,9 @@ from .serializers import (
     TicketSerializer,
     GetMemberSerializer,
     GetTicketInformationSerliazer,
+    TeamSpaceHistorySerializer,
+    MemberHistorySerliazer,
+    TicketHistorySerializer,
 )
 from django.shortcuts import get_object_or_404
 from rest_framework.exceptions import PermissionDenied
@@ -133,3 +136,18 @@ class GetTicketInformationViewSet(ReadOnlyModelViewSet):
     queryset = Ticket.objects.all()
     serializer_class = GetTicketInformationSerliazer
     permission_classes = [IsAuthenticated]
+
+
+class TeamSpaceHistoryViewSet(ReadOnlyModelViewSet):
+    queryset = TeamSpace.history.all()
+    serializer_class = TeamSpaceHistorySerializer
+
+
+class MemberHistoryViewSet(ReadOnlyModelViewSet):
+    queryset = Member.history.all()
+    serializer_class = MemberHistorySerliazer
+
+
+class TicketHistoryViewSet(ReadOnlyModelViewSet):
+    queryset = Ticket.history.all()
+    serializer_class = TicketHistorySerializer

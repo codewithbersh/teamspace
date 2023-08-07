@@ -6,6 +6,9 @@ from .views import (
     TicketViewSet,
     GetTeamSpaceMembersViewSet,
     GetTicketInformationViewSet,
+    TeamSpaceHistoryViewSet,
+    MemberHistoryViewSet,
+    TicketHistoryViewSet,
 )
 
 router = DefaultRouter()
@@ -22,5 +25,12 @@ router.register(
     GetTeamSpaceMembersViewSet,
     basename="teamspace_members",
 )
+
+# history
+router.register(
+    r"teamspace-history", TeamSpaceHistoryViewSet, basename="teamspace-history"
+)
+router.register(r"member-history", MemberHistoryViewSet, basename="member-history")
+router.register(r"ticket-history", TicketHistoryViewSet, basename="ticket-history")
 
 urlpatterns = router.urls

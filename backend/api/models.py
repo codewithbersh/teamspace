@@ -2,6 +2,7 @@ from django.db import models
 from accounts.models import User
 import uuid
 from django.utils.crypto import get_random_string
+from simple_history.models import HistoricalRecords
 
 
 class TeamSpace(models.Model):
@@ -12,6 +13,7 @@ class TeamSpace(models.Model):
     name = models.CharField(max_length=12)
     code = models.CharField(max_length=8, blank=True, unique=True)
     created_on = models.DateTimeField(auto_now_add=True)
+    history = HistoricalRecords()
 
     class Meta:
         ordering = ["-created_on"]
@@ -49,6 +51,7 @@ class Member(models.Model):
     role = models.CharField(max_length=2, choices=ROLE_CHOICES, default="NA")
     is_verified = models.BooleanField(default=False, blank=True)
     date_joined = models.DateTimeField(auto_now_add=True)
+    history = HistoricalRecords()
 
     class Meta:
         unique_together = (
@@ -101,6 +104,7 @@ class Ticket(models.Model):
     starting_date = models.DateField(blank=True, null=True)
     end_date = models.DateField(blank=True, null=True)
     archived = models.BooleanField(default=False)
+    history = HistoricalRecords(m2m_fields=[assignee])
 
     def save(self, *args, **kwargs):
         if not self.ticket_id:

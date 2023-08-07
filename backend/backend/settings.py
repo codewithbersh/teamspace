@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     "accounts",
     "corsheaders",
     "api",
+    "simple_history",
 ]
 
 AUTH_USER_MODEL = "accounts.User"
@@ -102,6 +103,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "simple_history.middleware.HistoryRequestMiddleware",
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True

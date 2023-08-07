@@ -1,4 +1,8 @@
-from rest_framework.serializers import ModelSerializer, PrimaryKeyRelatedField
+from rest_framework.serializers import (
+    ModelSerializer,
+    PrimaryKeyRelatedField,
+    SerializerMethodField,
+)
 from accounts.models import User
 from .models import TeamSpace, Member, Ticket
 
@@ -50,3 +54,51 @@ class GetTicketInformationSerliazer(ModelSerializer):
         model = Ticket
         fields = "__all__"
         depth = 1
+
+
+class TeamSpaceHistorySerializer(ModelSerializer):
+    created_by = UserSerializer()
+    history_user = UserSerializer()
+    changed_fields = SerializerMethodField()
+
+    class Meta:
+        model = TeamSpace.history.model
+        fields = "__all__"
+        depth = 1
+
+    def get_changed_fields(self, obj):
+        if hasattr(obj, "prev_record") and obj.prev_record:
+            return obj.diff_against(obj.prev_record).changed_fields
+        return []
+
+
+class MemberHistorySerliazer(ModelSerializer):
+    changed_fields = SerializerMethodField()
+    history_user = UserSerializer()
+    user = UserSerializer()
+
+    class Meta:
+        model = Member.history.model
+        fields = "__all__"
+        depth = 1
+
+    def get_changed_fields(self, obj):
+        if hasattr(obj, "prev_record") and obj.prev_record:
+            return obj.diff_against(obj.prev_record).changed_fields
+        return []
+
+
+class TicketHistorySerializer(ModelSerializer):
+    created_by = UserSerializer()
+    history_user = UserSerializer()
+    changed_fields = SerializerMethodField()
+
+    class Meta:
+        model = Ticket.history.model
+        fields = "__all__"
+        depth = 1
+
+    def get_changed_fields(self, obj):
+        if hasattr(obj, "prev_record") and obj.prev_record:
+            return obj.diff_against(obj.prev_record).changed_fields
+        return []
