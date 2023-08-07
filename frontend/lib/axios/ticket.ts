@@ -147,3 +147,37 @@ export const updateTicket = async ({
     return null;
   }
 };
+
+type UpdateTicketStatusProps = {
+  access: string;
+  ticketId: string;
+  status: Ticket["status"];
+};
+
+export const updateTicketStatus = async ({
+  access,
+  ticketId,
+  status,
+}: UpdateTicketStatusProps) => {
+  try {
+    const { data } = await axiosApi.patch<Ticket>(
+      `tickets/${ticketId}/`,
+      {
+        status,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${access}`,
+        },
+      }
+    );
+    return data;
+  } catch (error) {
+    if (isAxiosError(error)) {
+      console.log("Error message updateTicketStatus: ", error);
+      return null;
+    }
+    console.log("Error: ", error);
+    return null;
+  }
+};

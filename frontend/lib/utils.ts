@@ -1,6 +1,7 @@
 import { Ticket } from "@/types";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { GetMembersType } from "./axios/member";
 const { parseISO, format } = require("date-fns");
 
 export function cn(...inputs: ClassValue[]) {
@@ -46,4 +47,40 @@ const STATUS_MAP: Record<Ticket["status"], string> = {
 
 export const translateTicketStatus = (code: Ticket["status"]) => {
   return STATUS_MAP[code] || "Unknown";
+};
+
+type OptionsType = {
+  value: Ticket["status"];
+  label: string;
+  hidden?: boolean;
+};
+
+export const getOptions = (role: GetMembersType["role"]) => {
+  const isHidden = role === "NA";
+  const statuses: OptionsType[] = [
+    {
+      value: "CO",
+      label: "Completed",
+      hidden: isHidden,
+    },
+    {
+      value: "FR",
+      label: "For review",
+    },
+    {
+      value: "IP",
+      label: "In progress",
+    },
+    {
+      value: "PE",
+      label: "Pending",
+    },
+    {
+      value: "RO",
+      label: "Reopen",
+      hidden: isHidden,
+    },
+  ];
+
+  return statuses;
 };

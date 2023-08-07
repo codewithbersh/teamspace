@@ -91,6 +91,7 @@ const TicketForm = ({
         : undefined,
       type: ticket?.type,
     },
+    mode: "onChange",
   });
 
   const assigneeNoChanges = assigneeDefaultValues

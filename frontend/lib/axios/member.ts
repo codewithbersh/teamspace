@@ -67,7 +67,7 @@ export const getTeamSpaceMembers = async ({
     return data;
   } catch (error) {
     if (isAxiosError(error)) {
-      console.log("error message updateTeamSpace: ", error.message);
+      console.log("error message getTeamSpaceMembers: ", error.message);
       return null;
     }
     console.log("error: ", error);

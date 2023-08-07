@@ -38,6 +38,7 @@ export type User = {
   email: string;
   first_name: string;
   last_name: string;
+  image_url: string | undefined;
 };
 
 export type Ticket = {
@@ -61,6 +62,6 @@ export type TicketDetailed = Omit<
   "team_space" | "assignee" | "created_by"
 > & {
   team_space: TeamSpace;
-  assignee: User[];
+  assignee: User[] | undefined;
   created_by: User;
 };
