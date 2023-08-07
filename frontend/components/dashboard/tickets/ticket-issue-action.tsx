@@ -76,7 +76,7 @@ const TicketIssueAction = ({
       }
       disabled={disabled}
     >
-      <SelectTrigger className="w-[180px]">
+      <SelectTrigger className="w-[180px] ml-auto">
         <span className="text-muted-foreground">Status: </span>
         <SelectValue placeholder="Select status" />
       </SelectTrigger>
