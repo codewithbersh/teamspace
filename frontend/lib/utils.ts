@@ -59,21 +59,21 @@ export const getOptions = (role: GetMembersType["role"]) => {
   const isHidden = role === "NA";
   const statuses: OptionsType[] = [
     {
-      value: "CO",
-      label: "Completed",
-      hidden: isHidden,
-    },
-    {
-      value: "FR",
-      label: "For review",
+      value: "PE",
+      label: "Pending",
     },
     {
       value: "IP",
       label: "In progress",
     },
     {
-      value: "PE",
-      label: "Pending",
+      value: "FR",
+      label: "For review",
+    },
+    {
+      value: "CO",
+      label: "Completed",
+      hidden: isHidden,
     },
     {
       value: "RO",

@@ -78,7 +78,7 @@ const TicketInformationTable = ({
               "No assignee."
             )}
           </TableCell>
-          <TableCell className="text-right">$250.00</TableCell>
+          <TableCell className="text-right"></TableCell>
         </TableRow>
       </TableBody>
     </Table>
