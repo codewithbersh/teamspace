@@ -4,6 +4,11 @@ import { PageHeader } from "@/components/dashboard/page-header";
 import { buttonVariants } from "@/components/ui/button";
 
 import { cn } from "@/lib/utils";
+import { getTeamSpaceTickets } from "@/lib/axios/ticket";
+import { getCurrentSession } from "@/lib/session";
+import { redirect } from "next/navigation";
+import { DataTable } from "@/components/data-table";
+import { teamSpaceTicketsColumn } from "@/components/dashboard/tickets/teamspace-tickets-column";
 
 type Props = {
   params: {
@@ -11,7 +16,11 @@ type Props = {
   };
 };
 
-const TicketsPage = ({ params: { teamSpaceId } }: Props) => {
+const TicketsPage = async ({ params: { teamSpaceId } }: Props) => {
+  const session = await getCurrentSession();
+  if (!session) redirect("/login");
+  const access = session.user.backendSession.access;
+  const tickets = await getTeamSpaceTickets({ access, teamSpaceId });
   return (
     <div className="container space-y-12">
       <PageHeader
@@ -25,6 +34,8 @@ const TicketsPage = ({ params: { teamSpaceId } }: Props) => {
           New ticket
         </Link>
       </PageHeader>
+
+      <DataTable columns={teamSpaceTicketsColumn} data={tickets ?? []} />
     </div>
   );
 };

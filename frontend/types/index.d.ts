@@ -56,6 +56,7 @@ export type Ticket = {
   starting_date: Date | null | undefined;
   end_date: Date | null | undefined;
   archived: boolean;
+  ticket_id: string;
 };
 
 export type TicketDetailed = Omit<
@@ -79,4 +80,36 @@ export type Comment = {
   updated: Date;
   has_been_edited: boolean;
   has_been_deleted: boolean;
+};
+
+export type TicketHistory = {
+  history_id: number;
+  created_by: User;
+  history_user: User;
+  changed_fields: [
+    "type",
+    "title",
+    "description",
+    "status",
+    "priority",
+    "assignee",
+    "starting_date",
+    "end_date",
+    "archived",
+  ];
+  id: string;
+  ticket_id: string;
+  type: string;
+  title: string;
+  description: string;
+  status: string;
+  priority: string;
+  created_on: string;
+  starting_date: string;
+  end_date: string;
+  archived: boolean;
+  history_date: string;
+  history_change_reason: string | null;
+  history_type: "+" | "~" | "-";
+  team_space: TeamSpace;
 };

@@ -179,9 +179,15 @@ class GetTicketHistoryViewSet(ReadOnlyModelViewSet):
 
 
 class GetTicketInformationViewSet(ReadOnlyModelViewSet):
-    queryset = Ticket.objects.all()
     serializer_class = GetTicketInformationSerliazer
     permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        queryset = Ticket.objects.all()
+        teamspace_id = self.request.query_params.get("teamspace_id")
+        if teamspace_id is not None:
+            return queryset.filter(team_space__id=teamspace_id)
+        return queryset
 
 
 class TeamSpaceHistoryViewSet(ReadOnlyModelViewSet):
@@ -195,8 +201,14 @@ class MemberHistoryViewSet(ReadOnlyModelViewSet):
 
 
 class TicketHistoryViewSet(ReadOnlyModelViewSet):
-    queryset = Ticket.history.all()
     serializer_class = TicketHistorySerializer
+
+    def get_queryset(self):
+        teamspace_id = self.request.query_params.get("teamspace_id")
+        if teamspace_id is not None:
+            return Ticket.history.filter(team_space__id=teamspace_id)
+
+        return Ticket.history.all()
 
 
 class CommentHistoryViewSet(ReadOnlyModelViewSet):

@@ -1,7 +1,7 @@
 import { axiosApi } from "./axios";
 import { isAxiosError } from "axios";
 
-import { Ticket, TicketDetailed } from "@/types";
+import { Ticket, TicketDetailed, TicketHistory } from "@/types";
 
 type GetTicketProps = {
   access: string;
@@ -179,5 +179,34 @@ export const updateTicketStatus = async ({
     }
     console.log("Error: ", error);
     return null;
+  }
+};
+
+type GetTeamSpaceTickets = {
+  teamSpaceId: string;
+  access: string;
+};
+
+export const getTeamSpaceTickets = async ({
+  teamSpaceId,
+  access,
+}: GetTeamSpaceTickets) => {
+  try {
+    const { data } = await axiosApi.get<TicketDetailed[]>(
+      "ticket-information/",
+      {
+        params: {
+          teamspace_id: teamSpaceId,
+        },
+        headers: {
+          Authorization: `Bearer ${access}`,
+        },
+      }
+    );
+
+    return data;
+  } catch (error) {
+    console.log("Get teamspace tickets error: ", error);
+    return undefined;
   }
 };
