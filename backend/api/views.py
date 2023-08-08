@@ -163,6 +163,21 @@ class GetTeamSpaceMembersViewSet(ReadOnlyModelViewSet):
             )
 
 
+class GetTicketHistoryViewSet(ReadOnlyModelViewSet):
+    serializer_class = TicketHistorySerializer
+
+    def get_queryset(self):
+        ticket_id = self.kwargs.get("ticket_id", None)
+
+        if ticket_id is not None:
+            return Ticket.history.filter(id=ticket_id)
+        else:
+            return Response(
+                {"detail": "Ticket ID not provided."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+
 class GetTicketInformationViewSet(ReadOnlyModelViewSet):
     queryset = Ticket.objects.all()
     serializer_class = GetTicketInformationSerliazer

@@ -13,6 +13,7 @@ from .views import (
     CommentDetailViewSet,
     CommentHistoryViewSet,
     GetTicketCommentsViewSet,
+    GetTicketHistoryViewSet,
 )
 
 router = DefaultRouter()
@@ -36,6 +37,11 @@ router.register(
     r"tickets/(?P<ticket_id>[0-9a-f-]+)/comments",
     GetTicketCommentsViewSet,
     basename="ticket-comments",
+)
+router.register(
+    r"tickets/(?P<ticket_id>[0-9a-f-]+)/history",
+    GetTicketHistoryViewSet,
+    basename="ticket-history",
 )
 
 
