@@ -57,10 +57,26 @@ class GetTicketInformationSerliazer(ModelSerializer):
 
 
 class CommentSerializer(ModelSerializer):
+    member_detail = SerializerMethodField()
+
     class Meta:
         model = Comment
         fields = "__all__"
-        depth = 1
+        read_only_fields = ("member_detail",)
+
+    def get_member_detail(self, obj):
+        member = obj.member
+        return GetMemberSerializer(member).data
+
+
+class CommentDetailSerializer(ModelSerializer):
+    member = GetMemberSerializer()
+    ticket = GetTicketInformationSerliazer()
+
+    class Meta:
+        model = Comment
+        fields = "__all__"
+        depth = 2
 
 
 class TeamSpaceHistorySerializer(ModelSerializer):

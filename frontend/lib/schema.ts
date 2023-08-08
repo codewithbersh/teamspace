@@ -45,3 +45,10 @@ export const ticketSchema = z.object({
   end_date: z.date().optional().nullable(),
   assignee: z.array(z.string()).optional(),
 });
+
+export const ticketCommentSchema = z.object({
+  description: z
+    .string({ required_error: "Comment should not be blank." })
+    .max(64, "Comment should not exceed 64 characters")
+    .nonempty("Comment should not be blank."),
+});

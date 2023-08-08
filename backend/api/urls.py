@@ -4,13 +4,15 @@ from .views import (
     TeamSpaceViewSet,
     MemberViewSet,
     TicketViewSet,
+    CommentViewSet,
     GetTeamSpaceMembersViewSet,
     GetTicketInformationViewSet,
     TeamSpaceHistoryViewSet,
     MemberHistoryViewSet,
     TicketHistoryViewSet,
-    CommentViewSet,
+    CommentDetailViewSet,
     CommentHistoryViewSet,
+    GetTicketCommentsViewSet,
 )
 
 router = DefaultRouter()
@@ -19,7 +21,8 @@ router.register(r"users", UserViewSet, basename="user")
 router.register(r"teamspace", TeamSpaceViewSet, basename="teamspace")
 router.register(r"members", MemberViewSet, basename="member")
 router.register(r"tickets", TicketViewSet, basename="ticket")
-router.register(r"comments", CommentViewSet, basename="comments")
+router.register(r"comments", CommentViewSet, basename="comment")
+router.register(r"comment-detail", CommentDetailViewSet, basename="comments")
 router.register(
     r"ticket-information", GetTicketInformationViewSet, basename="ticket-information"
 )
@@ -28,6 +31,13 @@ router.register(
     GetTeamSpaceMembersViewSet,
     basename="teamspace_members",
 )
+
+router.register(
+    r"tickets/(?P<ticket_id>[0-9a-f-]+)/comments",
+    GetTicketCommentsViewSet,
+    basename="ticket-comments",
+)
+
 
 # history
 router.register(

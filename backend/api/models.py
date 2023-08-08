@@ -130,10 +130,15 @@ class Comment(models.Model):
     ticket = models.ForeignKey(
         Ticket, on_delete=models.CASCADE, related_name="comments"
     )
-    description = models.CharField(max_length=60)
+    description = models.CharField(max_length=64)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+    has_been_edited = models.BooleanField(default=False, blank=True)
+    has_been_deleted = models.BooleanField(default=False, blank=True)
     history = HistoricalRecords()
 
     def __str__(self):
         return self.description
+
+    class Meta:
+        ordering = ["-created"]

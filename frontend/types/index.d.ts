@@ -3,6 +3,7 @@ export type BackendUser = {
   email: string;
   first_name: string;
   last_name: string;
+  image_url: string | undefined;
 };
 
 export type BackendSession = {
@@ -64,4 +65,18 @@ export type TicketDetailed = Omit<
   team_space: TeamSpace;
   assignee: User[] | undefined;
   created_by: User;
+};
+
+export type Comment = {
+  id: string;
+  member_detail: Omit<Member, "user"> & {
+    user: BackendUser;
+  };
+  member: string;
+  ticket: string;
+  description: string;
+  created: Date;
+  updated: Date;
+  has_been_edited: boolean;
+  has_been_deleted: boolean;
 };

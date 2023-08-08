@@ -8,6 +8,7 @@ from .serializers import (
     UserSerializer,
     TicketSerializer,
     CommentSerializer,
+    CommentDetailSerializer,
     GetMemberSerializer,
     GetTicketInformationSerliazer,
     TeamSpaceHistorySerializer,
@@ -121,6 +122,28 @@ class CommentViewSet(ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     permission_classes = [IsAuthenticated]
+
+
+class CommentDetailViewSet(ReadOnlyModelViewSet):
+    queryset = Comment.objects.all()
+    serializer_class = CommentDetailSerializer
+    # permission_classes = [IsAuthenticated]
+
+
+class GetTicketCommentsViewSet(ReadOnlyModelViewSet):
+    serializer_class = CommentSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        ticket_id = self.kwargs.get("ticket_id", None)
+        if ticket_id is not None:
+            ticket = Ticket.objects.get(pk=ticket_id)
+            return ticket.comments
+        else:
+            return Response(
+                {"detail": "Ticket ID not provided."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
 
 class GetTeamSpaceMembersViewSet(ReadOnlyModelViewSet):

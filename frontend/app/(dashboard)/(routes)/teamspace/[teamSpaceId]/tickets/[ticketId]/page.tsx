@@ -11,6 +11,7 @@ import { getTicketInformation } from "@/lib/axios/ticket";
 import { getCurrentSession } from "@/lib/session";
 import { cn } from "@/lib/utils";
 import { getTeamSpaceMembers } from "@/lib/axios/member";
+import { getTicketComments } from "@/lib/axios/comment";
 
 type Props = {
   params: {
@@ -39,6 +40,7 @@ const TicketInformationPage = async ({
   );
 
   if (!member) redirect("/teamspace");
+  const comments = await getTicketComments({ access, ticketId });
   return (
     <div className="container space-y-12">
       <PageHeader
@@ -65,6 +67,7 @@ const TicketInformationPage = async ({
         ticket={ticket}
         backendSession={session.user.backendSession}
         teamSpaceMembers={teamSpaceMembers}
+        comments={comments}
       />
     </div>
   );
