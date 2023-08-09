@@ -22,7 +22,7 @@ import {
 import { TicketDetailed } from "@/types";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 
-export const teamSpaceTicketsColumn: ColumnDef<TicketDetailed>[] = [
+export const columns: ColumnDef<TicketDetailed>[] = [
   {
     id: "Ticket ID",
     accessorKey: "ticket_id",

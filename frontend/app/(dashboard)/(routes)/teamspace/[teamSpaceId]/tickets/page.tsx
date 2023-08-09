@@ -7,8 +7,8 @@ import { cn } from "@/lib/utils";
 import { getTeamSpaceTickets } from "@/lib/axios/ticket";
 import { getCurrentSession } from "@/lib/session";
 import { redirect } from "next/navigation";
-import { DataTable } from "@/components/data-table";
-import { teamSpaceTicketsColumn } from "@/components/dashboard/tickets/teamspace-tickets-column";
+import { DataTable } from "@/components/dashboard/tickets/table/data-table";
+import { columns } from "@/components/dashboard/tickets/table/columns";
 
 type Props = {
   params: {
@@ -35,7 +35,7 @@ const TicketsPage = async ({ params: { teamSpaceId } }: Props) => {
         </Link>
       </PageHeader>
 
-      <DataTable columns={teamSpaceTicketsColumn} data={tickets ?? []} />
+      <DataTable columns={columns} data={tickets ?? []} />
     </div>
   );
 };

@@ -33,6 +33,7 @@ import { addComment, updateComment } from "@/lib/axios/comment";
 import { GetMembersType } from "@/lib/axios/member";
 import { MessageSquarePlus } from "lucide-react";
 import { useCommentModal } from "@/hooks/use-comment-modal";
+import { Ticket } from "@/types";
 
 type FormType = z.infer<typeof ticketCommentSchema>;
 
@@ -40,9 +41,10 @@ type Props = {
   access: string;
   member: GetMembersType;
   ticketId: string;
+  ticketStatus: Ticket["status"];
 };
 
-const CommentForm = ({ access, member, ticketId }: Props) => {
+const CommentForm = ({ access, member, ticketId, ticketStatus }: Props) => {
   const { isOpen, setIsOpen, comment, setComment } = useCommentModal();
   const router = useRouter();
   const { toast } = useToast();
@@ -133,6 +135,7 @@ const CommentForm = ({ access, member, ticketId }: Props) => {
 
   const buttonText = comment ? "Save changes" : "Add comment";
   const formLabelText = comment ? "Edit comment" : "Add comment";
+  const commentDisabled = ticketStatus === "CO" && member.role === "NA";
 
   return (
     <Dialog open={isOpen} onOpenChange={() => handleOnOpenChange()}>
@@ -141,6 +144,7 @@ const CommentForm = ({ access, member, ticketId }: Props) => {
           variant="outline"
           onClick={() => setIsOpen(true)}
           className="gap-2"
+          disabled={commentDisabled}
         >
           <MessageSquarePlus className="w-[14px] h-[14px]" /> Add comment
         </Button>

@@ -10,13 +10,15 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { TicketIssueAction } from "./ticket-issue-action";
 import { CommentForm } from "./comment-form";
 import { Comment } from "./comment";
-
-import { GetMembersType } from "@/lib/axios/member";
 import {
   BackendSession,
   Comment as CommentType,
   TicketDetailed,
 } from "@/types";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+
+import { GetMembersType } from "@/lib/axios/member";
+import { Terminal } from "lucide-react";
 
 type Props = {
   ticket: TicketDetailed;
@@ -34,6 +36,9 @@ const TicketInformationTable = ({
   const member = teamSpaceMembers.find(
     (member) => member.user.id === backendSession.user.pk
   )!;
+
+  const nonAdminDisabledInformation =
+    ticket.status === "CO" && member.role === "NA";
   return (
     <Table>
       <TableHeader>
@@ -109,13 +114,29 @@ const TicketInformationTable = ({
                 "No comments"
               ) : (
                 <>
+                  {nonAdminDisabledInformation && (
+                    <div className="flex gap-4">
+                      <div className="invisible w-10 h-10 shrink-0" />
+                      <Alert>
+                        <Terminal className="h-4 w-4" />
+                        <AlertTitle>Heads up!</AlertTitle>
+                        <AlertDescription>
+                          Ticket has been resolved. Comments has been disabled.
+                        </AlertDescription>
+                      </Alert>
+                      <div className="invisible w-10 h-10 shrink-0" />
+                    </div>
+                  )}
                   {comments.map((comment) => (
-                    <Comment
-                      comment={comment}
-                      member={member}
-                      access={backendSession.access}
-                      key={comment.id}
-                    />
+                    <>
+                      <Comment
+                        comment={comment}
+                        member={member}
+                        access={backendSession.access}
+                        key={comment.id}
+                        ticketStatus={ticket.status}
+                      />
+                    </>
                   ))}
                 </>
               )}
@@ -126,6 +147,7 @@ const TicketInformationTable = ({
               access={backendSession.access}
               member={member}
               ticketId={ticket.id}
+              ticketStatus={ticket.status}
             />
           </TableCell>
         </TableRow>

@@ -19,7 +19,7 @@ import { useCommentModal } from "@/hooks/use-comment-modal";
 
 import { deleteComment, updateComment } from "@/lib/axios/comment";
 import { GetMembersType } from "@/lib/axios/member";
-import { Comment } from "@/types";
+import { Comment, Ticket } from "@/types";
 import { Dot, MoreVertical } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 
@@ -27,9 +27,10 @@ type Props = {
   comment: Comment;
   member: GetMembersType;
   access: string;
+  ticketStatus: Ticket["status"];
 };
 
-const Comment = ({ comment, member, access }: Props) => {
+const Comment = ({ comment, member, access, ticketStatus }: Props) => {
   const router = useRouter();
   const { toast } = useToast();
   const {
@@ -45,6 +46,8 @@ const Comment = ({ comment, member, access }: Props) => {
   const deletedText = userIsOwner
     ? `Your comment is hidden.`
     : `${commentedBy}'s comment has been hidden`;
+
+  const optionsDisabled = ticketStatus === "CO" && member.role === "NA";
 
   const { mutate: deleteCommentMutate } = useMutation({
     mutationFn: deleteComment,
@@ -153,7 +156,7 @@ const Comment = ({ comment, member, access }: Props) => {
         {userIsOwner && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon">
+              <Button variant="ghost" size="icon" disabled={optionsDisabled}>
                 <MoreVertical className="w-4 h-4" />
               </Button>
             </DropdownMenuTrigger>
