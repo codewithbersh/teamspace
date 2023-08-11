@@ -4,20 +4,26 @@ import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 
 import { cn } from "@/lib/utils";
+import { GetMembersType } from "@/lib/axios/member";
 
-const MainNav = () => {
+type MainNavProps = {
+  member: GetMembersType;
+};
+
+const MainNav = ({ member }: MainNavProps) => {
   const pathname = usePathname();
   const params = useParams();
   const routes = [
     {
       href: `/teamspace/${params.teamSpaceId}/tickets`,
       label: "Tickets",
-      active: pathname === `/teamspace/${params.teamSpaceId}/tickets`,
+      active: pathname.startsWith(`/teamspace/${params.teamSpaceId}/tickets`),
     },
     {
       href: `/teamspace/${params.teamSpaceId}/settings`,
       label: "Settings",
-      active: pathname === `/teamspace/${params.teamSpaceId}/settings`,
+      active: pathname.startsWith(`/teamspace/${params.teamSpaceId}/settings`),
+      hidden: member.role === "NA",
     },
   ];
   return (
@@ -28,7 +34,8 @@ const MainNav = () => {
           key={route.href}
           className={cn(
             "text-sm font-medium transition-colors hover:text-foreground",
-            route.active ? "text-foreground " : "text-muted-foreground"
+            route.active ? "text-foreground " : "text-muted-foreground",
+            route.hidden && "hidden"
           )}
         >
           {route.label}

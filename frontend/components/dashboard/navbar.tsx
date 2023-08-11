@@ -6,22 +6,34 @@ import { UserAccountNav } from "./user-account-nav";
 
 import { getTeamSpaces } from "@/lib/axios/teamspace";
 import { getCurrentSession } from "@/lib/session";
+import { getTeamSpaceMembers } from "@/lib/axios/member";
 
-const Navbar = async () => {
+type Navbar = {
+  teamSpaceId: string;
+};
+const Navbar = async ({ teamSpaceId }: Navbar) => {
   const session = await getCurrentSession();
   if (!session) redirect("/login");
   const teamSpaces = await getTeamSpaces({
     access: session.user.backendSession.access,
   });
   if (!teamSpaces) redirect("/login");
+  const members = await getTeamSpaceMembers({
+    access: session.user.backendSession.access,
+    teamSpaceId,
+  });
+
+  const member = members?.find(
+    (member) => member.user.id === session.user.backendSession.user.pk
+  )!;
 
   return (
     <div className="border-b">
       <div className="container h-16 flex items-center">
         <TeamSwitcher teamSpaces={teamSpaces} />
-        <MainNav />
+        <MainNav member={member} />
         <div className="ml-auto flex items-center">
-          <UserAccountNav session={session} />
+          <UserAccountNav session={session} member={member} />
         </div>
       </div>
     </div>

@@ -14,12 +14,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { GetMembersType } from "@/lib/axios/member";
 
 type Props = {
   session: Session;
+  member: GetMembersType;
 };
 
-const UserAccountNav = ({ session }: Props) => {
+const UserAccountNav = ({ session, member }: Props) => {
   const user = session.user;
 
   const pathname = usePathname();
@@ -34,6 +36,7 @@ const UserAccountNav = ({ session }: Props) => {
       href: `/teamspace/${params.teamSpaceId}/settings`,
       label: "Settings",
       active: pathname === `/teamspace/${params.teamSpaceId}/settings`,
+      hidden: member.role === "NA",
     },
   ];
 
@@ -41,7 +44,7 @@ const UserAccountNav = ({ session }: Props) => {
     <DropdownMenu>
       <DropdownMenuTrigger>
         <Avatar>
-          <AvatarImage src={user.backendSession.user.image_url} />
+          <AvatarImage className="bg-slate-100" src={member.user.image_url} />
           <AvatarFallback className="bg-foreground">
             <span className="text-lg font-bold text-accent">
               {user.backendSession.user.email[0].toUpperCase()}
@@ -59,7 +62,9 @@ const UserAccountNav = ({ session }: Props) => {
         <DropdownMenuSeparator />
         {routes.map((route) => (
           <DropdownMenuItem key={route.href} asChild>
-            <Link href={route.href}>{route.label}</Link>
+            <Link href={route.href} className={route.hidden ? "hidden" : ""}>
+              {route.label}
+            </Link>
           </DropdownMenuItem>
         ))}
         <DropdownMenuSeparator />

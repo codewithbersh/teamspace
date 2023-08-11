@@ -16,7 +16,7 @@ const DashboardRootLayout = async ({ children }: Props) => {
   });
 
   if (teamspaces && teamspaces.length > 0)
-    redirect(`/teamspace/${teamspaces[0].id}`);
+    redirect(`/teamspace/${teamspaces[0].id}/tickets`);
 
   return <>{children}</>;
 };

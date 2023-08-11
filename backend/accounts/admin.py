@@ -6,10 +6,10 @@ from .forms import CustomUserCreationForm
 
 class CustomUserAdmin(UserAdmin):
     add_form = CustomUserCreationForm
-    list_display = ("id", "email", "first_name", "last_name", "is_staff")
+    list_display = ("id", "email", "first_name", "last_name", "is_staff", "image_url")
     fieldsets = (
         (None, {"fields": ("email", "password")}),
-        ("Personal info", {"fields": ("first_name", "last_name")}),
+        ("Personal info", {"fields": ("first_name", "last_name", "image_url")}),
         (
             "Permissions",
             {

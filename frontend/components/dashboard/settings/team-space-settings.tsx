@@ -25,15 +25,17 @@ import DeleteTeamSpaceDialog from "./delete-teamspace-dialog";
 import { teamSpaceSchema } from "@/lib/schema";
 import { updateTeamSpace } from "@/lib/axios/teamspace";
 import { TeamSpace } from "@/types";
+import { GetMembersType } from "@/lib/axios/member";
 
 type FormType = z.infer<typeof teamSpaceSchema>;
 
 type Props = {
   teamSpace: TeamSpace;
   session: Session;
+  member: GetMembersType;
 };
 
-const TeamSpaceSettings = ({ teamSpace, session }: Props) => {
+const TeamSpaceSettings = ({ teamSpace, session, member }: Props) => {
   const router = useRouter();
   const { toast } = useToast();
   const { mutate } = useMutation({
@@ -78,18 +80,14 @@ const TeamSpaceSettings = ({ teamSpace, session }: Props) => {
     );
   }
 
-  if (session.user.backendSession.user.pk !== teamSpace.created_by)
-    return (
-      <div className="space-y-2">
-        <h1 className=" font-medium text-lg leading-none">Permission Denied</h1>
-        <p className="text-muted-foreground">
-          You don't have enough permission to access this page
-        </p>
-      </div>
-    );
-
   return (
     <div className="max-w-[400px] space-y-8">
+      <div className="space-y-1">
+        <h1 className="font-bold  sm:text-2xl !leading-none">Team Space</h1>
+        <p className="text-sm text-muted-foreground">
+          Manage team space settings
+        </p>
+      </div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <FormField
@@ -112,21 +110,23 @@ const TeamSpaceSettings = ({ teamSpace, session }: Props) => {
         </form>
       </Form>
 
-      <div className="space-y-4">
-        <div className="space-y-2">
-          <h1 className="text-sm font-medium leading-none">
-            Delete Team Space
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            This is a danger zone.
-          </p>
-        </div>
+      {member.role === "SU" && (
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <h1 className="text-sm font-medium leading-none">
+              Delete Team Space
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              This is a danger zone.
+            </p>
+          </div>
 
-        <DeleteTeamSpaceDialog
-          access={session.user.backendSession.access}
-          teamSpaceId={teamSpace.id}
-        />
-      </div>
+          <DeleteTeamSpaceDialog
+            access={session.user.backendSession.access}
+            teamSpaceId={teamSpace.id}
+          />
+        </div>
+      )}
     </div>
   );
 };

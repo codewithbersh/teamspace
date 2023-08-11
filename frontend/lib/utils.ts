@@ -1,4 +1,4 @@
-import { Ticket } from "@/types";
+import { Member, Ticket } from "@/types";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { GetMembersType } from "./axios/member";
@@ -47,6 +47,16 @@ const STATUS_MAP: Record<Ticket["status"], string> = {
 
 export const translateTicketStatus = (code: Ticket["status"]) => {
   return STATUS_MAP[code] || "Unknown";
+};
+
+const ROLE_MAP: Record<Member["role"], string> = {
+  NA: "Developer",
+  AD: "Admin",
+  SU: "Owner",
+};
+
+export const translateMemberRole = (code: Member["role"]) => {
+  return ROLE_MAP[code] || "Unknown";
 };
 
 type OptionsType = {

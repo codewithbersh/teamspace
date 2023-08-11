@@ -1,12 +1,14 @@
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 import { PageHeader } from "@/components/dashboard/page-header";
 import { TeamSpaceSettings } from "@/components/dashboard/settings/team-space-settings";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { MembersSettings } from "@/components/dashboard/settings/members-settings";
 
 import { getTeamSpace } from "@/lib/axios/teamspace";
 import { getCurrentSession } from "@/lib/session";
+import { getTeamSpaceMembers } from "@/lib/axios/member";
 
 type Props = {
   params: {
@@ -22,23 +24,42 @@ const SettingsPage = async ({ params: { teamSpaceId } }: Props) => {
     teamSpaceId: teamSpaceId,
   });
   if (!teamSpace) redirect("/teamspace");
+
+  const members = await getTeamSpaceMembers({
+    access: session.user.backendSession.access,
+    teamSpaceId: teamSpaceId,
+  });
+
+  if (!members) redirect("/teamspace");
+
+  const member = members.find(
+    (member) => member.user.id === session.user.backendSession.user.pk
+  )!;
+
+  if (member.role === "NA") notFound();
+
   return (
     <div className="container space-y-12">
       <PageHeader
         title="Settings"
-        description="View tickets, activities, and team space settings"
+        description="View and manage team space members and settings."
       />
 
-      <Tabs defaultValue="tickets" className="space-y-8">
+      <Tabs defaultValue="members" className="space-y-8">
         <TabsList>
-          <TabsTrigger value="tickets">Tickets</TabsTrigger>
-          <TabsTrigger value="activities">Activities</TabsTrigger>
+          <TabsTrigger value="members">Members</TabsTrigger>
           <TabsTrigger value="teamspace">Team Space</TabsTrigger>
         </TabsList>
-        <TabsContent value="tickets">Tickets</TabsContent>
-        <TabsContent value="activities">Activities</TabsContent>
+
+        <TabsContent value="members">
+          <MembersSettings teamSpaceId={teamSpaceId} />
+        </TabsContent>
         <TabsContent value="teamspace">
-          <TeamSpaceSettings teamSpace={teamSpace} session={session} />
+          <TeamSpaceSettings
+            teamSpace={teamSpace}
+            session={session}
+            member={member}
+          />
         </TabsContent>
       </Tabs>
 
