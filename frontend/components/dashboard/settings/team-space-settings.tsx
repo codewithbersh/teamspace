@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Session } from "next-auth";
 
@@ -8,7 +9,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useMutation } from "@tanstack/react-query";
 
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -25,6 +26,7 @@ import DeleteTeamSpaceDialog from "./delete-teamspace-dialog";
 import { teamSpaceSchema } from "@/lib/schema";
 import { updateTeamSpace } from "@/lib/axios/teamspace";
 import { Member, TeamSpace } from "@/types";
+import { cn } from "@/lib/utils";
 
 type FormType = z.infer<typeof teamSpaceSchema>;
 
@@ -49,7 +51,7 @@ const TeamSpaceSettings = ({ teamSpace, session, member }: Props) => {
     mode: "onChange",
   });
 
-  const isEdited = !form.formState.isDirty;
+  const isEdited = form.watch("name") === teamSpace.name;
 
   function onSubmit(values: FormType) {
     mutate(
@@ -79,6 +81,11 @@ const TeamSpaceSettings = ({ teamSpace, session, member }: Props) => {
     );
   }
 
+  const handleCopy = () => {
+    navigator.clipboard.writeText(teamSpace.code);
+    toast({ description: "Code copied to clipboard." });
+  };
+
   return (
     <div className="max-w-[400px] space-y-8">
       <div className="space-y-1">
@@ -87,6 +94,34 @@ const TeamSpaceSettings = ({ teamSpace, session, member }: Props) => {
           Manage team space settings
         </p>
       </div>
+
+      <div className="space-y-[6px]">
+        <div
+          className={cn(
+            buttonVariants({ variant: "secondary" }),
+            "w-full justify-start !py-6"
+          )}
+        >
+          <span className="font-medium tracking-wider">
+            <span className="font-normal tracking-normal text-muted-foreground">
+              Invitation code:{" "}
+            </span>
+            {teamSpace.code}
+          </span>
+          <Button
+            variant="outline"
+            size="sm"
+            className="ml-auto"
+            onClick={() => handleCopy()}
+          >
+            Copy
+          </Button>
+        </div>
+        <p className="text-sm text-muted-foreground">
+          This code allows other to join your team space.
+        </p>
+      </div>
+
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <FormField

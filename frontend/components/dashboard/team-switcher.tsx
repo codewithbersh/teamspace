@@ -93,7 +93,7 @@ const TeamSwitcher = ({ className, teamSpaces = [] }: Props) => {
                 }}
               >
                 <PlusCircle className="mr-2 h-4 w-4" />
-                Create or join
+                Create or Join
               </CommandItem>
             </CommandGroup>
           </CommandList>

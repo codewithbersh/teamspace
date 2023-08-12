@@ -63,7 +63,13 @@ const TicketInformationTable = async ({
         </TableRow>
         <TableRow>
           <TableCell className="font-medium ">Description</TableCell>
-          <TableCell>{ticket.description}</TableCell>
+          <TableCell>
+            {ticket.description ?? (
+              <span className="text-muted-foreground">
+                No description added.
+              </span>
+            )}
+          </TableCell>
           <TableCell className="text-right "></TableCell>
         </TableRow>
         <TableRow>
@@ -93,16 +99,18 @@ const TicketInformationTable = async ({
                 ))}
               </div>
             ) : (
-              "No assignee."
+              <span className="text-muted-foreground">No assignee.</span>
             )}
           </TableCell>
           <TableCell className="text-right ">
-            <AssigneeAction
-              assignees={ticket.assigned_members}
-              members={members}
-              ticketId={ticket.id}
-              access={access}
-            />
+            {member.role !== "NA" && (
+              <AssigneeAction
+                assignees={ticket.assigned_members}
+                members={members}
+                ticketId={ticket.id}
+                access={access}
+              />
+            )}
           </TableCell>
         </TableRow>
         <TableRow>
@@ -112,7 +120,7 @@ const TicketInformationTable = async ({
               {!comments ? (
                 "An error has occured fetching comments."
               ) : comments.length < 1 ? (
-                "No comments"
+                <span className="text-muted-foreground">No comments.</span>
               ) : (
                 <>
                   {nonAdminDisabledInformation && (
@@ -148,6 +156,7 @@ const TicketInformationTable = async ({
               member={member}
               ticketId={ticket.id}
               ticketStatus={ticket.status}
+              assignedMembers={ticket.assigned_members}
             />
           </TableCell>
         </TableRow>

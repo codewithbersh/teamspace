@@ -41,9 +41,16 @@ type Props = {
   member: Member;
   ticketId: string;
   ticketStatus: Ticket["status"];
+  assignedMembers: Member[];
 };
 
-const CommentForm = ({ access, member, ticketId, ticketStatus }: Props) => {
+const CommentForm = ({
+  access,
+  member,
+  ticketId,
+  ticketStatus,
+  assignedMembers,
+}: Props) => {
   const { isOpen, setIsOpen, comment, setComment } = useCommentModal();
   const router = useRouter();
   const { toast } = useToast();
@@ -136,7 +143,15 @@ const CommentForm = ({ access, member, ticketId, ticketStatus }: Props) => {
 
   const buttonText = comment ? "Save changes" : "Add comment";
   const formLabelText = comment ? "Edit comment" : "Add comment";
-  const commentDisabled = ticketStatus === "CO" && member.role === "NA";
+  const userAssigned = assignedMembers.find(
+    (member) => member.id === member.id
+  );
+  const commentDisabled =
+    ticketStatus === "CO" && member.role === "NA"
+      ? true
+      : member.role === "NA" && !userAssigned
+      ? true
+      : false;
 
   return (
     <Dialog open={isOpen} onOpenChange={() => handleOnOpenChange()}>
