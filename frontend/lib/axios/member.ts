@@ -100,19 +100,22 @@ export const getTeamSpaceMembers = async ({
 type UpdateMemberProps = {
   access: string;
   memberId: string;
-  isVerified: boolean;
+  values: {
+    is_verified?: boolean;
+    role?: "NA" | "AD";
+  };
 };
 
 export const updateMember = async ({
   access,
   memberId,
-  isVerified,
+  values,
 }: UpdateMemberProps) => {
   try {
     const { data } = await axiosApi.patch<Member>(
       `members/${memberId}/`,
       {
-        is_verified: isVerified,
+        ...values,
       },
       {
         headers: {

@@ -1,13 +1,15 @@
 import { DataTable } from "./table/data-table";
 import { columns } from "./table/columns";
+import { superUserColumns } from "./table/super-user-columns";
 
-import { TeamSpace } from "@/types";
+import { Member, TeamSpace } from "@/types";
 
 type Props = {
   teamSpace: TeamSpace;
+  member: Member;
 };
 
-const MembersSettings = async ({ teamSpace }: Props) => {
+const MembersSettings = ({ teamSpace, member }: Props) => {
   const members = teamSpace.assigned_members;
 
   return (
@@ -19,7 +21,10 @@ const MembersSettings = async ({ teamSpace }: Props) => {
         </p>
       </div>
 
-      <DataTable columns={columns} data={members} />
+      <DataTable
+        columns={member.role !== "SU" ? columns : superUserColumns}
+        data={members}
+      />
     </div>
   );
 };

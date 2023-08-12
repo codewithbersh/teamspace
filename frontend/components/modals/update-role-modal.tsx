@@ -9,10 +9,10 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 
 import { updateMember } from "@/lib/axios/member";
-import { useAcceptMemberModal } from "@/hooks/use-accept-member-modal";
+import { useUpdateRoleModal } from "@/hooks/use-update-role-modal";
 
-const AcceptMemberModal = () => {
-  const { onClose, isOpen, member, setMember } = useAcceptMemberModal();
+const UpdateRoleModal = () => {
+  const { onClose, isOpen, member, setMember } = useUpdateRoleModal();
   const { data: session } = useSession();
   const { toast } = useToast();
   const router = useRouter();
@@ -29,19 +29,19 @@ const AcceptMemberModal = () => {
     }, 1000);
   };
 
-  const title = member.is_verified ? "Mark member as pending" : "Accept member";
-  const description = member.is_verified
-    ? "Members on pending status will not be able to access the team space."
-    : "Active members may view and can make changes on your team space.";
-  const acceptButtonText = member.is_verified ? "Save changes" : "Continue";
+  const title =
+    member.role === "AD" ? "Remove as admin" : "Add member as admin";
+  const description =
+    "Admins can create/update tickets & accept/remove team space members.";
+  const acceptButtonText = "Save changes";
 
   const handleSelectAccept = () => {
     if (!session) redirect("/login");
     mutate(
       {
         access: session.user.backendSession.access,
+        values: { role: member.role === "AD" ? "NA" : "AD" },
         memberId: member.id,
-        values: { is_verified: !member.is_verified },
       },
       {
         onSuccess: (values) => {
@@ -54,9 +54,7 @@ const AcceptMemberModal = () => {
           } else {
             router.refresh();
             toast({
-              description: values.is_verified
-                ? "Member has been verified successfully."
-                : "Member has been marked as pending.",
+              description: "Member role has been updated.",
             });
             onClose();
           }
@@ -102,4 +100,4 @@ const AcceptMemberModal = () => {
   );
 };
 
-export default AcceptMemberModal;
+export default UpdateRoleModal;

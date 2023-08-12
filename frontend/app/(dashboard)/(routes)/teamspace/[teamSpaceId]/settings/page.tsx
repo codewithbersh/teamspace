@@ -49,7 +49,7 @@ const SettingsPage = async ({ params: { teamSpaceId } }: Props) => {
         </TabsList>
 
         <TabsContent value="members">
-          <MembersSettings teamSpace={teamSpace} />
+          <MembersSettings teamSpace={teamSpace} member={member} />
         </TabsContent>
         <TabsContent value="teamspace">
           <TeamSpaceSettings
