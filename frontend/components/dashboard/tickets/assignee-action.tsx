@@ -60,7 +60,6 @@ export function AssigneeAction({
     const assignees = selectedMembers.map((member) => {
       return { member: member.id, ticket: ticketId };
     });
-    console.log(assignees);
     mutate(
       {
         access,
