@@ -143,10 +143,8 @@ const CommentForm = ({
 
   const buttonText = comment ? "Save changes" : "Add comment";
   const formLabelText = comment ? "Edit comment" : "Add comment";
-  const userAssigned = assignedMembers.find((user) => user.id === member.id);
-  const commentDisabled = userAssigned
-    ? ticketStatus === "CO" && member.role === "NA"
-    : true;
+  const isUserAssigned = assignedMembers.find((user) => user.id === member.id);
+  const disabled = member.role !== "NA" ? false : isUserAssigned ? false : true;
 
   return (
     <Dialog open={isOpen} onOpenChange={() => handleOnOpenChange()}>
@@ -155,7 +153,7 @@ const CommentForm = ({
           variant="outline"
           onClick={() => setIsOpen(true)}
           className="gap-2"
-          disabled={commentDisabled}
+          disabled={disabled}
         >
           <MessageSquarePlus className="w-[14px] h-[14px]" /> Add comment
         </Button>
