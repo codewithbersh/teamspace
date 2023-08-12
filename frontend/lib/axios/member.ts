@@ -96,3 +96,53 @@ export const getTeamSpaceMembers = async ({
     return null;
   }
 };
+
+type UpdateMemberProps = {
+  access: string;
+  memberId: string;
+  isVerified: boolean;
+};
+
+export const updateMember = async ({
+  access,
+  memberId,
+  isVerified,
+}: UpdateMemberProps) => {
+  try {
+    const { data } = await axiosApi.patch<Member>(
+      `members/${memberId}/`,
+      {
+        is_verified: isVerified,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${access}`,
+        },
+      }
+    );
+    return data;
+  } catch (error) {
+    console.log("Update member error: ", error);
+    return null;
+  }
+};
+
+type DeleteMemberProps = {
+  access: string;
+  memberId: string;
+};
+
+export const deleteMember = async ({ access, memberId }: DeleteMemberProps) => {
+  try {
+    const { status } = await axiosApi.delete(`members/${memberId}/`, {
+      headers: {
+        Authorization: `Bearer ${access}`,
+      },
+    });
+
+    return status;
+  } catch (error) {
+    console.log("Delete member error: ", error);
+    return null;
+  }
+};

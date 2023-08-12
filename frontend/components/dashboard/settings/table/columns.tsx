@@ -13,6 +13,8 @@ import {
 import { Member } from "@/types";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { translateMemberRole } from "@/lib/utils";
+import { useAcceptMemberModal } from "@/hooks/use-accept-member-modal";
+import { useRemoveMemberModal } from "@/hooks/use-remove-member-modal";
 
 export const columns: ColumnDef<Member>[] = [
   {
@@ -92,8 +94,19 @@ export const columns: ColumnDef<Member>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
+      const { onOpen, setMember } = useAcceptMemberModal();
+      const { onOpen: onOpenRemove, setMember: setMemberRemove } =
+        useRemoveMemberModal();
       const isAdmin = row.original.role === "AD" || row.original.role === "SU";
       const isPending = !row.original.is_verified;
+      const handleSelectAcceptMember = () => {
+        setMember(row.original);
+        onOpen();
+      };
+      const handleSelectRemoveMember = () => {
+        setMemberRemove(row.original);
+        onOpenRemove();
+      };
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -103,10 +116,16 @@ export const columns: ColumnDef<Member>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem disabled={!isPending}>
-              Accept member
+            <DropdownMenuItem
+              disabled={isAdmin}
+              onSelect={() => handleSelectAcceptMember()}
+            >
+              {isPending ? "Accept member" : "Mark as pending"}
             </DropdownMenuItem>
-            <DropdownMenuItem disabled={isAdmin}>
+            <DropdownMenuItem
+              disabled={isAdmin}
+              onSelect={() => handleSelectRemoveMember()}
+            >
               {isPending ? "Remove request" : "Remove member"}
             </DropdownMenuItem>
           </DropdownMenuContent>
