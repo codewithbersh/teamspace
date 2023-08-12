@@ -61,7 +61,6 @@ const JoinTeamSpaceForm = ({}: Props) => {
       {
         onSuccess: (values) => {
           setIsLoading(false);
-          console.log("Values: ", values);
           if (values) {
             if ("detail" in values) {
               toast({
