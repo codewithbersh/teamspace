@@ -33,14 +33,11 @@ const TicketIssueAction = ({ ticket, access, member }: Props) => {
   });
 
   const isUserAssigned = ticket.assigned_members.find(
-    (member) => member.id === member.id
+    (user) => user.id === member.id
   );
-  const disabled =
-    member.role === "NA" && ticket.status === "CO"
-      ? true
-      : member.role === "NA" && !isUserAssigned
-      ? true
-      : false;
+  const disabled = isUserAssigned
+    ? ticket.status === "CO" && member.role === "NA"
+    : true;
 
   const handleSelectStatus = (selectedStatus: Ticket["status"]) => {
     mutate(

@@ -143,15 +143,10 @@ const CommentForm = ({
 
   const buttonText = comment ? "Save changes" : "Add comment";
   const formLabelText = comment ? "Edit comment" : "Add comment";
-  const userAssigned = assignedMembers.find(
-    (member) => member.id === member.id
-  );
-  const commentDisabled =
-    ticketStatus === "CO" && member.role === "NA"
-      ? true
-      : member.role === "NA" && !userAssigned
-      ? true
-      : false;
+  const userAssigned = assignedMembers.find((user) => user.id === member.id);
+  const commentDisabled = userAssigned
+    ? ticketStatus === "CO" && member.role === "NA"
+    : true;
 
   return (
     <Dialog open={isOpen} onOpenChange={() => handleOnOpenChange()}>
