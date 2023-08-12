@@ -3,11 +3,12 @@ import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 import {
+  addImageUrltoUser,
   getBackendSession,
   getDemoBackendSession,
-  updateUserInfo,
+  getUserDetails,
 } from "./axios/user";
-import { BackendSession } from "@/types";
+import { BackendSession } from "@/types/next-auth";
 
 type CredentialsInput = {
   email: string;
@@ -48,21 +49,30 @@ export const authOptions: NextAuthOptions = {
 
         const picture = (profile as any)?.picture as string | undefined;
 
-        if (!backendSession.user.image_url) {
-          const updatedUser = await updateUserInfo({
+        const user = await getUserDetails({
+          token: backendSession.access,
+          userId: backendSession.user.pk,
+        });
+
+        if (!user) return false;
+
+        if (!user.image_url && picture) {
+          const updatedUser = await addImageUrltoUser({
             token: backendSession.access,
-            user: { pk: backendSession.user.pk, image_url: picture },
+            user: { id: backendSession.user.pk, image_url: picture },
           });
 
+          if (!updatedUser) return false;
+
           account.backendSession = {
-            ...backendSession,
-            user: {
-              ...backendSession.user,
-              image_url: picture,
-            },
+            access: backendSession.access,
+            user: updatedUser,
           };
         } else {
-          account.backendSession = backendSession;
+          account.backendSession = {
+            access: backendSession.access,
+            user: user,
+          };
         }
 
         return true;
@@ -80,7 +90,17 @@ export const authOptions: NextAuthOptions = {
           return false;
         }
 
-        account.backendSession = backendSession;
+        const user = backendSession.user as any;
+
+        account.backendSession = {
+          access: backendSession.access,
+          user: {
+            id: user.pk,
+            first_name: user.first_name,
+            last_name: user.last_name,
+            email: user.email,
+          },
+        };
         return true;
       }
 

@@ -56,16 +56,17 @@ const JoinTeamSpaceForm = ({}: Props) => {
       {
         access: session.user.backendSession.access,
         code: values.code,
-        user: session.user.backendSession.user.pk,
+        user: session.user.backendSession.user.id,
       },
       {
         onSuccess: (values) => {
           setIsLoading(false);
+          console.log("Values: ", values);
           if (values) {
-            if ("error" in values) {
+            if ("detail" in values) {
               toast({
                 title: "Uh oh! Something went wrong.",
-                description: values.error,
+                description: values.detail as any,
               });
             } else {
               toast({

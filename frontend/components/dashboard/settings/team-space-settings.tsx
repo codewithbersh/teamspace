@@ -24,15 +24,14 @@ import DeleteTeamSpaceDialog from "./delete-teamspace-dialog";
 
 import { teamSpaceSchema } from "@/lib/schema";
 import { updateTeamSpace } from "@/lib/axios/teamspace";
-import { TeamSpace } from "@/types";
-import { GetMembersType } from "@/lib/axios/member";
+import { Member, TeamSpace } from "@/types";
 
 type FormType = z.infer<typeof teamSpaceSchema>;
 
 type Props = {
   teamSpace: TeamSpace;
   session: Session;
-  member: GetMembersType;
+  member: Member;
 };
 
 const TeamSpaceSettings = ({ teamSpace, session, member }: Props) => {

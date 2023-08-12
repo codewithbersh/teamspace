@@ -1,4 +1,4 @@
-export type BackendUser = {
+export type User = {
   id: string;
   email: string;
   first_name: string;
@@ -6,30 +6,34 @@ export type BackendUser = {
   image_url: string | undefined;
 };
 
-export type BackendSession = {
+export type GoogleSession = {
   access: string;
-  refresh: string;
   user: {
     pk: string;
-    email: string;
     first_name: string;
     last_name: string;
-    image_url: string | undefined;
+    email: string;
   };
 };
 
 export type TeamSpace = {
   id: string;
-  created_by: string;
+  created_by_detail: User;
+  assigned_members: Member[];
+
   name: string;
   code: string;
-  created_on: Date;
+  created_on: string;
+  created_by: string;
 };
 
 export type Member = {
   id: string;
+  user_detail: User;
+
   role: "NA" | "SU" | "AD";
   is_verified: boolean;
+  date_join: string;
   team_space: string;
   user: string;
 };
@@ -44,72 +48,42 @@ export type User = {
 
 export type Ticket = {
   id: string;
+  created_by_detail: Member;
+  assigned_members: Member[];
+  comments: Comment[];
+  ticket_id: string;
+
   team_space: string;
+  created_by: string;
+
   type: "FR" | "IS" | "IM";
   title: string;
   description: string | undefined;
   status: "PE" | "IP" | "CO" | "FR" | "RO";
   priority: "LW" | "MD" | "HI" | "IM";
-  assignee: string[];
-  created_by: string[];
-  created_on: Date;
-  starting_date: Date | null | undefined;
-  end_date: Date | null | undefined;
+  created_on: string;
+  starting_date: string | null;
+  end_date: string | null;
   archived: boolean;
-  ticket_id: string;
-};
-
-export type TicketDetailed = Omit<
-  Ticket,
-  "team_space" | "assignee" | "created_by"
-> & {
-  team_space: TeamSpace;
-  assignee: User[] | undefined;
-  created_by: User;
 };
 
 export type Comment = {
   id: string;
-  member_detail: Omit<Member, "user"> & {
-    user: BackendUser;
-  };
-  member: string;
-  ticket: string;
-  description: string;
-  created: Date;
-  updated: Date;
+  member_detail: Member;
+  created: string;
+  updated: string;
   has_been_edited: boolean;
   has_been_deleted: boolean;
+
+  description: string;
+
+  member: string;
+  ticket: string;
 };
 
-export type TicketHistory = {
-  history_id: number;
-  created_by: User;
-  history_user: User;
-  changed_fields: [
-    "type",
-    "title",
-    "description",
-    "status",
-    "priority",
-    "assignee",
-    "starting_date",
-    "end_date",
-    "archived",
-  ];
+export type Assignee = {
   id: string;
-  ticket_id: string;
-  type: string;
-  title: string;
-  description: string;
-  status: string;
-  priority: string;
-  created_on: string;
-  starting_date: string;
-  end_date: string;
-  archived: boolean;
-  history_date: string;
-  history_change_reason: string | null;
-  history_type: "+" | "~" | "-";
-  team_space: TeamSpace;
+  date_assigned: string;
+  ticket: string;
+  member: string;
 };

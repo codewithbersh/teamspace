@@ -1,7 +1,6 @@
 import { axiosApi } from "./axios";
-import { isAxiosError } from "axios";
 
-import { Ticket, TicketDetailed, TicketHistory } from "@/types";
+import { Ticket } from "@/types";
 
 type GetTicketProps = {
   access: string;
@@ -10,7 +9,6 @@ type GetTicketProps = {
 
 export const getTicket = async ({ access, ticketId }: GetTicketProps) => {
   if (!ticketId) return null;
-
   try {
     const { data } = await axiosApi.get<Ticket>(`tickets/${ticketId}/`, {
       headers: {
@@ -19,9 +17,7 @@ export const getTicket = async ({ access, ticketId }: GetTicketProps) => {
     });
     return data;
   } catch (error) {
-    if (isAxiosError(error)) {
-      return error.response?.data as { detail: string };
-    }
+    console.log("Get ticket error: ", error);
     return null;
   }
 };
@@ -36,40 +32,31 @@ export const getTicketInformation = async ({
   ticketId,
 }: GetTicketInformationProps) => {
   try {
-    const { data } = await axiosApi.get<TicketDetailed>(
-      `ticket-information/${ticketId}/`,
-      {
-        headers: {
-          Authorization: `Bearer ${access}`,
-        },
-      }
-    );
+    const { data } = await axiosApi.get<Ticket>(`tickets/${ticketId}/`, {
+      headers: {
+        Authorization: `Bearer ${access}`,
+      },
+    });
     return data;
   } catch (error) {
-    if (isAxiosError(error)) {
-      console.log("Error: ", error);
-      return null;
-    }
-    console.log("Error: ", error);
+    console.log("Get ticket information error: ", error);
     return null;
   }
 };
 
-type NewTicket = {
-  created_by: string;
-  team_space: string;
-  type: "FR" | "IS" | "IM";
-  priority: "IM" | "LW" | "MD" | "HI";
-  title: string;
-  description?: string | undefined;
-  starting_date?: string | null | undefined;
-  end_date?: string | undefined | null;
-  assignee?: string[] | undefined;
-};
-
 type CreateTicketProps = {
   access: string;
-  ticket: NewTicket;
+  ticket: Pick<
+    Ticket,
+    | "created_by"
+    | "team_space"
+    | "type"
+    | "priority"
+    | "title"
+    | "description"
+    | "starting_date"
+    | "end_date"
+  >;
 };
 
 export const createTicket = async ({ access, ticket }: CreateTicketProps) => {
@@ -77,7 +64,6 @@ export const createTicket = async ({ access, ticket }: CreateTicketProps) => {
     const { data } = await axiosApi.post<Ticket>(
       "tickets/",
       {
-        assignee: ticket.assignee ?? [],
         team_space: ticket.team_space,
         created_by: ticket.created_by,
         title: ticket.title,
@@ -96,33 +82,30 @@ export const createTicket = async ({ access, ticket }: CreateTicketProps) => {
 
     return data;
   } catch (error) {
-    if (isAxiosError(error)) {
-      console.log("Error message Create Ticket: ", error);
-      return null;
-    }
-    console.log("Error: ", error);
+    console.log("Create ticket error: ", error);
     return null;
   }
 };
 
 type UpdateTicketProps = {
-  ticketId: string;
-  ticket: NewTicket;
+  ticket: Pick<
+    Ticket,
+    | "id"
+    | "type"
+    | "title"
+    | "description"
+    | "starting_date"
+    | "end_date"
+    | "priority"
+  >;
   access: string;
 };
 
-export const updateTicket = async ({
-  ticketId,
-  ticket,
-  access,
-}: UpdateTicketProps) => {
+export const updateTicket = async ({ ticket, access }: UpdateTicketProps) => {
   try {
     const { data } = await axiosApi.patch<Ticket>(
-      `tickets/${ticketId}/`,
+      `tickets/${ticket.id}/`,
       {
-        assignee: ticket.assignee ?? [],
-        team_space: ticket.team_space,
-        created_by: ticket.created_by,
         title: ticket.title,
         description: ticket.description ?? null,
         starting_date: ticket.starting_date ?? null,
@@ -139,11 +122,7 @@ export const updateTicket = async ({
 
     return data;
   } catch (error) {
-    if (isAxiosError(error)) {
-      console.log("Error message Create Ticket: ", error);
-      return null;
-    }
-    console.log("Error: ", error);
+    console.log("Update ticket error: ", error);
     return null;
   }
 };
@@ -173,11 +152,7 @@ export const updateTicketStatus = async ({
     );
     return data;
   } catch (error) {
-    if (isAxiosError(error)) {
-      console.log("Error message updateTicketStatus: ", error);
-      return null;
-    }
-    console.log("Error: ", error);
+    console.log("Update ticket status error: ", error);
     return null;
   }
 };
@@ -192,17 +167,14 @@ export const getTeamSpaceTickets = async ({
   access,
 }: GetTeamSpaceTickets) => {
   try {
-    const { data } = await axiosApi.get<TicketDetailed[]>(
-      "ticket-information/",
-      {
-        params: {
-          teamspace_id: teamSpaceId,
-        },
-        headers: {
-          Authorization: `Bearer ${access}`,
-        },
-      }
-    );
+    const { data } = await axiosApi.get<Ticket[]>("tickets/", {
+      params: {
+        team_space_id: teamSpaceId,
+      },
+      headers: {
+        Authorization: `Bearer ${access}`,
+      },
+    });
 
     return data;
   } catch (error) {

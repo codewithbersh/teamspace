@@ -23,11 +23,6 @@ export const joinTeamSpaceSchema = z.object({
     .max(8, "Code should be 8 digits"),
 });
 
-const assigneeSchema = z.object({
-  value: z.string(),
-  label: z.string(),
-});
-
 export const ticketSchema = z.object({
   type: z.enum(["FR", "IS", "IM"], {
     required_error: "Ticket type is required",
@@ -43,7 +38,6 @@ export const ticketSchema = z.object({
   description: z.string().max(512).optional(),
   starting_date: z.date().optional().nullable(),
   end_date: z.date().optional().nullable(),
-  assignee: z.array(z.string()).optional(),
 });
 
 export const ticketCommentSchema = z.object({

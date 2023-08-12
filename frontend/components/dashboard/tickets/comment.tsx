@@ -18,14 +18,13 @@ import { useToast } from "@/components/ui/use-toast";
 import { useCommentModal } from "@/hooks/use-comment-modal";
 
 import { deleteComment, updateComment } from "@/lib/axios/comment";
-import { GetMembersType } from "@/lib/axios/member";
-import { Comment, Ticket } from "@/types";
+import { Comment, Member, Ticket } from "@/types";
 import { Dot, MoreVertical } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 
 type Props = {
   comment: Comment;
-  member: GetMembersType;
+  member: Member;
   access: string;
   ticketStatus: Ticket["status"];
 };
@@ -40,7 +39,7 @@ const Comment = ({ comment, member, access, ticketStatus }: Props) => {
     setComment,
   } = useCommentModal();
 
-  const commentedBy = `${comment.member_detail.user.first_name} ${comment.member_detail.user.last_name}`;
+  const commentedBy = `${comment.member_detail.user_detail.first_name} ${comment.member_detail.user_detail.last_name}`;
   const userIsOwner = comment.member === member.id;
   const h1Text = userIsOwner ? "You" : commentedBy;
   const deletedText = userIsOwner
@@ -118,9 +117,9 @@ const Comment = ({ comment, member, access, ticketStatus }: Props) => {
   return (
     <div className="flex items-center gap-4">
       <Avatar>
-        <AvatarImage src={comment.member_detail.user.image_url} />
+        <AvatarImage src={comment.member_detail.user_detail.image_url} />
         <AvatarFallback className="text-base font-bold">
-          {comment.member_detail.user.email[0].toUpperCase()}
+          {comment.member_detail.user_detail.email[0].toUpperCase()}
         </AvatarFallback>
       </Avatar>
 

@@ -1,19 +1,14 @@
-import { getTeamSpaceMembers } from "@/lib/axios/member";
-import { getCurrentSession } from "@/lib/session";
-import { redirect } from "next/navigation";
 import { DataTable } from "./table/data-table";
 import { columns } from "./table/columns";
 
+import { TeamSpace } from "@/types";
+
 type Props = {
-  teamSpaceId: string;
+  teamSpace: TeamSpace;
 };
 
-const MembersSettings = async ({ teamSpaceId }: Props) => {
-  const session = await getCurrentSession();
-  if (!session) redirect("/login");
-  const access = session.user.backendSession.access;
-  const members = await getTeamSpaceMembers({ access, teamSpaceId });
-  if (!members) throw new Error("An error has occured.");
+const MembersSettings = async ({ teamSpace }: Props) => {
+  const members = teamSpace.assigned_members;
 
   return (
     <div className="space-y-8">

@@ -19,14 +19,14 @@ import {
   translateTicketStatus,
   translateTicketType,
 } from "@/lib/utils";
-import { TicketDetailed } from "@/types";
+import { Ticket } from "@/types";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 
-export const columns: ColumnDef<TicketDetailed>[] = [
+export const columns: ColumnDef<Ticket>[] = [
   {
     id: "Ticket ID",
     accessorKey: "ticket_id",
-    header: "Ticket ID",
+    header: "ID",
   },
   {
     accessorKey: "title",
@@ -87,13 +87,14 @@ export const columns: ColumnDef<TicketDetailed>[] = [
     accessorKey: "assignee",
     header: "Assignee",
     cell: ({ row }) => {
-      const assignee = row.original.assignee;
-      if (!assignee || assignee.length === 0)
+      const assignees = row.original.assigned_members;
+
+      if (!assignees || assignees.length === 0)
         return <div className="h-10 flex items-center">No assignee.</div>;
 
       return (
         <div className="flex items-center">
-          {assignee.slice(0, 3).map((member, index) => (
+          {assignees.slice(0, 3).map((member, index) => (
             <Avatar
               key={member.id}
               className={cn(
@@ -102,15 +103,15 @@ export const columns: ColumnDef<TicketDetailed>[] = [
                 "bg-blue-100 border border-white"
               )}
             >
-              <AvatarImage src={member.image_url} />
+              <AvatarImage src={member.user_detail.image_url} />
               <AvatarFallback className="font-bold text-base">
-                {member.email[0].toUpperCase()}
+                {member.user_detail.email[0].toUpperCase()}
               </AvatarFallback>
             </Avatar>
           ))}
-          {assignee.length > 3 && (
+          {assignees.length > 3 && (
             <p className="-translate-x-1/3 text-sm text-muted-foreground font-medium">
-              +{assignee.length - 3} more
+              +{assignees.length - 3} more
             </p>
           )}
         </div>

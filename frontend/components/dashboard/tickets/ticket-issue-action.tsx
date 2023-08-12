@@ -13,25 +13,16 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 
 import { updateTicketStatus } from "@/lib/axios/ticket";
-import { GetMembersType } from "@/lib/axios/member";
-import { BackendSession, TicketDetailed } from "@/types";
+import { Member, Ticket } from "@/types";
 import { getOptions } from "@/lib/utils";
 
 type Props = {
-  ticket: TicketDetailed;
-  backendSession: BackendSession;
-  teamSpaceMembers: GetMembersType[];
+  ticket: Ticket;
+  access: string;
+  member: Member;
 };
 
-const TicketIssueAction = ({
-  ticket,
-  backendSession,
-  teamSpaceMembers,
-}: Props) => {
-  const currentUser = backendSession.user;
-  const member = teamSpaceMembers.find(
-    (member) => member.user.id === currentUser.pk
-  )!;
+const TicketIssueAction = ({ ticket, access, member }: Props) => {
   const { toast } = useToast();
   const router = useRouter();
 
@@ -43,10 +34,10 @@ const TicketIssueAction = ({
 
   const disabled = member.role === "NA" && ticket.status === "CO";
 
-  const handleSelectStatus = (selectedStatus: TicketDetailed["status"]) => {
+  const handleSelectStatus = (selectedStatus: Ticket["status"]) => {
     mutate(
       {
-        access: backendSession.access,
+        access: access,
         ticketId: ticket.id,
         status: selectedStatus,
       },
@@ -71,7 +62,7 @@ const TicketIssueAction = ({
   return (
     <Select
       defaultValue={ticket.status}
-      onValueChange={(selectedStatus: TicketDetailed["status"]) =>
+      onValueChange={(selectedStatus: Ticket["status"]) =>
         handleSelectStatus(selectedStatus)
       }
       disabled={disabled}

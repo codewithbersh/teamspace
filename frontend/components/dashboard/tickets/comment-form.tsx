@@ -30,16 +30,15 @@ import { useToast } from "@/components/ui/use-toast";
 
 import { ticketCommentSchema } from "@/lib/schema";
 import { addComment, updateComment } from "@/lib/axios/comment";
-import { GetMembersType } from "@/lib/axios/member";
 import { MessageSquarePlus } from "lucide-react";
 import { useCommentModal } from "@/hooks/use-comment-modal";
-import { Ticket } from "@/types";
+import { Member, Ticket } from "@/types";
 
 type FormType = z.infer<typeof ticketCommentSchema>;
 
 type Props = {
   access: string;
-  member: GetMembersType;
+  member: Member;
   ticketId: string;
   ticketStatus: Ticket["status"];
 };
@@ -60,6 +59,8 @@ const CommentForm = ({ access, member, ticketId, ticketStatus }: Props) => {
   useEffect(() => {
     if (comment) {
       form.setValue("description", comment.description);
+    } else {
+      form.setValue("description", "");
     }
   }, [comment]);
 

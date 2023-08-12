@@ -4,10 +4,10 @@ import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 
 import { cn } from "@/lib/utils";
-import { GetMembersType } from "@/lib/axios/member";
+import { Member } from "@/types";
 
 type MainNavProps = {
-  member: GetMembersType;
+  member: Member;
 };
 
 const MainNav = ({ member }: MainNavProps) => {

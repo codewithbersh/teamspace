@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { redirect, usePathname } from "next/navigation";
+import { redirect } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
@@ -27,13 +27,11 @@ import { createTeamSpace } from "@/lib/axios/teamspace";
 import { useTeamSpaceModal } from "@/hooks/use-teamspace-modal";
 
 type FormType = z.infer<typeof teamSpaceSchema>;
-type Props = {};
 
-const CreateTeamSpaceForm = ({}: Props) => {
+const CreateTeamSpaceForm = () => {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const teamSpaceModal = useTeamSpaceModal();
-  const pathname = usePathname();
 
   const { data: session } = useSession();
   const queryClient = useQueryClient();
@@ -59,7 +57,7 @@ const CreateTeamSpaceForm = ({}: Props) => {
         access: session.user.backendSession.access,
         teamSpace: {
           name: values.name,
-          created_by: session.user.backendSession.user.pk,
+          created_by: session.user.backendSession.user.id,
         },
       },
       {
@@ -74,19 +72,12 @@ const CreateTeamSpaceForm = ({}: Props) => {
             });
           } else {
             form.reset();
-            window.location.assign(`/teamspace/${values.id}`);
+            window.location.assign(`/teamspace/${values.id}/tickets`);
           }
         },
       }
     );
   }
-
-  const handleCancel = () => {
-    if (pathname === "/teamspace") {
-      redirect("/");
-    } else {
-    }
-  };
 
   return (
     <>

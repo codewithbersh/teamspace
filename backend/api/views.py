@@ -1,62 +1,40 @@
-from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
+from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from accounts.models import User
-from .models import TeamSpace, Member, Ticket, Comment
+from .models import TeamSpace, Member, Ticket, Comment, Assignee
 from .serializers import (
+    UserSerializer,
     TeamSpaceSerializer,
     MemberSerializer,
-    UserSerializer,
     TicketSerializer,
     CommentSerializer,
-    CommentDetailSerializer,
-    GetMemberSerializer,
-    GetTicketInformationSerliazer,
-    TeamSpaceHistorySerializer,
-    MemberHistorySerliazer,
-    TicketHistorySerializer,
-    CommentHistorySerializer,
+    AssigneeSerializer,
 )
 from django.shortcuts import get_object_or_404
-from rest_framework.exceptions import PermissionDenied
-from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.response import Response
 from rest_framework import status
-from django.db import IntegrityError
-from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.decorators import action
 
 
-class UserViewSet(ModelViewSet):
+class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
 
-class TeamSpaceViewSet(ModelViewSet):
+class TeamSpaceViewSet(viewsets.ModelViewSet):
+    queryset = TeamSpace.objects.all()
     serializer_class = TeamSpaceSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return TeamSpace.objects.filter(
-            members__user=self.request.user, members__is_verified=True
-        )
-
-    def get_object(self):
-        team_space = get_object_or_404(
-            TeamSpace,
-            pk=self.kwargs.get("pk"),
-            members__user=self.request.user,
-            members__is_verified=True,
-        )
-
-        if not team_space.members.filter(
+        user_team_spaces = Member.objects.filter(
             user=self.request.user, is_verified=True
-        ).exists():
-            raise PermissionDenied("You are not a verified member of this team space.")
+        ).values_list("team_space", flat=True)
+        return TeamSpace.objects.filter(id__in=user_team_spaces)
 
-        return team_space
-
-    def create(self, request, *args, **kwargs):
+    def create(self, request):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
@@ -73,144 +51,100 @@ class TeamSpaceViewSet(ModelViewSet):
             serializer.data, status=status.HTTP_201_CREATED, headers=headers
         )
 
-    def destroy(self, request, *args, **kwargs):
-        team_space = self.get_object()
 
-        if team_space.created_by != request.user:
-            raise PermissionDenied("You are not authorized to delete this team space.")
-
-        return super().destroy(request, *args, **kwargs)
-
-
-class MemberViewSet(ModelViewSet):
-    queryset = Member.objects.all()
+class MemberViewSet(viewsets.ModelViewSet):
     serializer_class = MemberSerializer
     permission_classes = [IsAuthenticated]
 
     def create(self, request, *args, **kwargs):
+        code = request.data.get("code")
+
         try:
-            team_space = TeamSpace.objects.get(code=request.data["code"])
-            user = User.objects.get(id=request.data["user"])
-
-            new_member = Member.objects.create(team_space=team_space, user=user)
-
-            serializer = self.get_serializer(new_member)
-
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-        except ObjectDoesNotExist:
+            team_space = TeamSpace.objects.get(code=code)
+        except TeamSpace.DoesNotExist:
             return Response(
-                {"error": "The provided team space code does not exist."},
+                {"detail": "Invalid team_space code."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-        except IntegrityError:
+
+        if Member.objects.filter(team_space=team_space, user=request.user).exists():
             return Response(
-                {"error": "Your request has already been submitted"},
+                {"detail": "Your request has already been submitted."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-        except Exception as e:
-            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
+        member = Member.objects.create(
+            team_space=team_space,
+            user=request.user,
+            role="NA",
+            is_verified=False,
+        )
 
-class TicketViewSet(ModelViewSet):
-    queryset = Ticket.objects.all()
-    serializer_class = TicketSerializer
-    permission_classes = [IsAuthenticated]
+        serializer = self.get_serializer(member)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
+    def get_object(self):
+        team_space_id = self.request.query_params.get("team_space_id")
+        user_id = self.request.query_params.get("user_id")
 
-class CommentViewSet(ModelViewSet):
-    queryset = Comment.objects.all()
-    serializer_class = CommentSerializer
-    permission_classes = [IsAuthenticated]
+        if team_space_id and user_id:
+            return get_object_or_404(
+                Member, team_space__id=team_space_id, user__id=user_id
+            )
+        return super(MemberViewSet, self).get_object()
 
+    def list(self, request, *args, **kwargs):
+        team_space_id = request.query_params.get("team_space_id")
+        user_id = request.query_params.get("user_id")
 
-class CommentDetailViewSet(ReadOnlyModelViewSet):
-    queryset = Comment.objects.all()
-    serializer_class = CommentDetailSerializer
-    # permission_classes = [IsAuthenticated]
+        if team_space_id and user_id:
+            return self.retrieve(request, *args, **kwargs)
 
-
-class GetTicketCommentsViewSet(ReadOnlyModelViewSet):
-    serializer_class = CommentSerializer
-    permission_classes = [IsAuthenticated]
+        return super(MemberViewSet, self).list(request, *args, **kwargs)
 
     def get_queryset(self):
-        ticket_id = self.kwargs.get("ticket_id", None)
-        if ticket_id is not None:
-            ticket = Ticket.objects.get(pk=ticket_id)
-            return ticket.comments
-        else:
-            return Response(
-                {"detail": "Ticket ID not provided."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-
-class GetTeamSpaceMembersViewSet(ReadOnlyModelViewSet):
-    serializer_class = GetMemberSerializer
-    permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        team_space_id = self.kwargs.get("team_space_id", None)
-
+        team_space_id = self.request.query_params.get("team_space_id")
         if team_space_id is not None:
-            team_space = TeamSpace.objects.get(pk=team_space_id)
-            return team_space.members
-        else:
-            return Response(
-                {"detail": "TeamSpace ID not provided."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+            team_space = TeamSpace.objects.get(id=team_space_id)
+            members = team_space.members.all()
+            return members
+        return Member.objects.all()
 
 
-class GetTicketHistoryViewSet(ReadOnlyModelViewSet):
-    serializer_class = TicketHistorySerializer
-
-    def get_queryset(self):
-        ticket_id = self.kwargs.get("ticket_id", None)
-
-        if ticket_id is not None:
-            return Ticket.history.filter(id=ticket_id)
-        else:
-            return Response(
-                {"detail": "Ticket ID not provided."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-
-class GetTicketInformationViewSet(ReadOnlyModelViewSet):
-    serializer_class = GetTicketInformationSerliazer
-    permission_classes = [IsAuthenticated]
+class TicketViewSet(viewsets.ModelViewSet):
+    serializer_class = TicketSerializer
 
     def get_queryset(self):
         queryset = Ticket.objects.all()
-        teamspace_id = self.request.query_params.get("teamspace_id")
-        if teamspace_id is not None:
-            return queryset.filter(team_space__id=teamspace_id)
+        team_space_id = self.request.query_params.get("team_space_id")
+        if team_space_id is not None:
+            queryset = queryset.filter(team_space__id=team_space_id)
         return queryset
 
 
-class TeamSpaceHistoryViewSet(ReadOnlyModelViewSet):
-    queryset = TeamSpace.history.all()
-    serializer_class = TeamSpaceHistorySerializer
+class CommentViewSet(viewsets.ModelViewSet):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
 
 
-class MemberHistoryViewSet(ReadOnlyModelViewSet):
-    queryset = Member.history.all()
-    serializer_class = MemberHistorySerliazer
+class AssigneeViewSet(viewsets.ModelViewSet):
+    queryset = Assignee.objects.all()
+    serializer_class = AssigneeSerializer
 
+    @action(detail=False, methods=["post"], url_path="ticket/(?P<ticket_id>[^/.]+)")
+    def manage_assignees_for_ticket(self, request, ticket_id=None, *args, **kwargs):
+        data = request.data
 
-class TicketHistoryViewSet(ReadOnlyModelViewSet):
-    serializer_class = TicketHistorySerializer
+        Assignee.objects.filter(ticket=ticket_id).delete()
 
-    def get_queryset(self):
-        teamspace_id = self.request.query_params.get("teamspace_id")
-        if teamspace_id is not None:
-            return Ticket.history.filter(team_space__id=teamspace_id)
+        if not data:
+            return Response(status=status.HTTP_204_NO_CONTENT)
 
-        return Ticket.history.all()
+        created_data = []
+        for item in data:
+            serializer = self.get_serializer(data=item)
+            if serializer.is_valid(raise_exception=False):
+                self.perform_create(serializer)
+                created_data.append(serializer.data)
 
-
-class CommentHistoryViewSet(ReadOnlyModelViewSet):
-    queryset = Comment.history.all()
-    serializer_class = CommentHistorySerializer
+        return Response(created_data, status=status.HTTP_201_CREATED)

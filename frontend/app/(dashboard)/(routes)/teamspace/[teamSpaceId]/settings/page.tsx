@@ -8,7 +8,6 @@ import { MembersSettings } from "@/components/dashboard/settings/members-setting
 
 import { getTeamSpace } from "@/lib/axios/teamspace";
 import { getCurrentSession } from "@/lib/session";
-import { getTeamSpaceMembers } from "@/lib/axios/member";
 
 type Props = {
   params: {
@@ -18,24 +17,23 @@ type Props = {
 
 const SettingsPage = async ({ params: { teamSpaceId } }: Props) => {
   const session = await getCurrentSession();
+
   if (!session) redirect("/login");
+
+  const access = session.user.backendSession.access;
+
   const teamSpace = await getTeamSpace({
-    access: session.user.backendSession.access,
-    teamSpaceId: teamSpaceId,
+    access,
+    teamSpaceId,
   });
+
   if (!teamSpace) redirect("/teamspace");
 
-  const members = await getTeamSpaceMembers({
-    access: session.user.backendSession.access,
-    teamSpaceId: teamSpaceId,
-  });
+  const member = teamSpace.assigned_members.find(
+    (member) => member.user === session.user.backendSession.user.id
+  );
 
-  if (!members) redirect("/teamspace");
-
-  const member = members.find(
-    (member) => member.user.id === session.user.backendSession.user.pk
-  )!;
-
+  if (!member) redirect("/teamspace");
   if (member.role === "NA") notFound();
 
   return (
@@ -52,7 +50,7 @@ const SettingsPage = async ({ params: { teamSpaceId } }: Props) => {
         </TabsList>
 
         <TabsContent value="members">
-          <MembersSettings teamSpaceId={teamSpaceId} />
+          <MembersSettings teamSpace={teamSpace} />
         </TabsContent>
         <TabsContent value="teamspace">
           <TeamSpaceSettings

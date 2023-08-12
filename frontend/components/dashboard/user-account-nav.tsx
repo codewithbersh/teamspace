@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
-import type { Session } from "next-auth";
 
 import {
   DropdownMenu,
@@ -14,16 +13,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { GetMembersType } from "@/lib/axios/member";
+
+import { Member } from "@/types";
 
 type Props = {
-  session: Session;
-  member: GetMembersType;
+  member: Member;
 };
 
-const UserAccountNav = ({ session, member }: Props) => {
-  const user = session.user;
-
+const UserAccountNav = ({ member }: Props) => {
   const pathname = usePathname();
   const params = useParams();
   const routes = [
@@ -44,19 +41,22 @@ const UserAccountNav = ({ session, member }: Props) => {
     <DropdownMenu>
       <DropdownMenuTrigger>
         <Avatar>
-          <AvatarImage className="bg-slate-100" src={member.user.image_url} />
+          <AvatarImage
+            className="bg-slate-100"
+            src={member.user_detail.image_url}
+          />
           <AvatarFallback className="bg-foreground">
             <span className="text-lg font-bold text-accent">
-              {user.backendSession.user.email[0].toUpperCase()}
+              {member.user_detail.email[0].toUpperCase()}
             </span>
           </AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>
-          <p>{user.name ? user.name : user.backendSession.user.first_name}</p>
+          <p>{member.user_detail.first_name}</p>
           <p className="text-muted-foreground font-normal truncate max-w-[200px]">
-            {user.backendSession.user.email}
+            {member.user_detail.email}
           </p>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />

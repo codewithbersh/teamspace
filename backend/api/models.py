@@ -2,7 +2,6 @@ from django.db import models
 from accounts.models import User
 import uuid
 from django.utils.crypto import get_random_string
-from simple_history.models import HistoricalRecords
 
 
 class TeamSpace(models.Model):
@@ -13,13 +12,12 @@ class TeamSpace(models.Model):
     name = models.CharField(max_length=12)
     code = models.CharField(max_length=8, blank=True, unique=True)
     created_on = models.DateTimeField(auto_now_add=True)
-    history = HistoricalRecords()
 
     class Meta:
         ordering = ["-created_on"]
 
     def __str__(self):
-        return self.name
+        return self.code
 
     def save(self, *args, **kwargs):
         if not self.code:
@@ -51,7 +49,6 @@ class Member(models.Model):
     role = models.CharField(max_length=2, choices=ROLE_CHOICES, default="NA")
     is_verified = models.BooleanField(default=False, blank=True)
     date_joined = models.DateTimeField(auto_now_add=True)
-    history = HistoricalRecords()
 
     class Meta:
         unique_together = (
@@ -96,15 +93,13 @@ class Ticket(models.Model):
     description = models.TextField(max_length=512, blank=True, null=True)
     status = models.CharField(max_length=2, choices=STATUS_CHOICES, default="PE")
     priority = models.CharField(max_length=2, choices=PRIORITY_CHOICES, default="MD")
-    assignee = models.ManyToManyField(User, related_name="assigned_tickets", blank=True)
     created_by = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="created_tickets"
+        Member, on_delete=models.CASCADE, related_name="created_tickets"
     )
     created_on = models.DateTimeField(auto_now_add=True)
     starting_date = models.DateField(blank=True, null=True)
     end_date = models.DateField(blank=True, null=True)
     archived = models.BooleanField(default=False)
-    history = HistoricalRecords(m2m_fields=[assignee])
 
     def save(self, *args, **kwargs):
         if not self.ticket_id:
@@ -121,6 +116,30 @@ class Ticket(models.Model):
     def __str__(self):
         return self.ticket_id
 
+    class Meta:
+        ordering = ["-created_on"]
+
+
+class Assignee(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    ticket = models.ForeignKey(
+        Ticket, on_delete=models.CASCADE, related_name="assignees"
+    )
+    member = models.ForeignKey(
+        Member, on_delete=models.CASCADE, related_name="assigned_tickets"
+    )
+    date_assigned = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.member.user.email} assigned to {self.ticket.ticket_id}"
+
+    class Meta:
+        unique_together = (
+            "ticket",
+            "member",
+        )
+        ordering = ["-date_assigned"]
+
 
 class Comment(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -135,7 +154,6 @@ class Comment(models.Model):
     updated = models.DateTimeField(auto_now=True)
     has_been_edited = models.BooleanField(default=False, blank=True)
     has_been_deleted = models.BooleanField(default=False, blank=True)
-    history = HistoricalRecords()
 
     def __str__(self):
         return self.description

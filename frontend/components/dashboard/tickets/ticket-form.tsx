@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { ticketSchema } from "@/lib/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useMutation } from "@tanstack/react-query";
 
@@ -32,13 +32,11 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
-import Select from "react-select";
 
 import { PRIORITY_CHOICES, TYPE_CHOICES } from "./config";
 import { cn, formatDate } from "@/lib/utils";
 import { CalendarIcon } from "lucide-react";
-import { GetMembersType } from "@/lib/axios/member";
-import { BackendSession, Ticket } from "@/types";
+import { Member, Ticket } from "@/types";
 import { createTicket, updateTicket } from "@/lib/axios/ticket";
 import { format } from "date-fns";
 import { useToast } from "@/components/ui/use-toast";
@@ -46,28 +44,15 @@ import { useToast } from "@/components/ui/use-toast";
 type FormType = z.infer<typeof ticketSchema>;
 
 type Props = {
-  teamSpaceMembers: GetMembersType[];
   ticket: Ticket | null;
-  backendSession: BackendSession;
   teamSpaceId: string;
+  access: string;
+  member: Member;
 };
 
-const TicketForm = ({
-  teamSpaceMembers,
-  ticket,
-  backendSession,
-  teamSpaceId,
-}: Props) => {
+const TicketForm = ({ ticket, access, teamSpaceId, member }: Props) => {
   const { toast } = useToast();
   const router = useRouter();
-  const assigneeOptions = teamSpaceMembers.map((member) => ({
-    value: member.user.id,
-    label: member.user.email,
-  }));
-
-  const assigneeDefaultValues = ticket?.assignee.map((assignee) =>
-    assigneeOptions.find((option) => option.value === assignee)
-  );
 
   const { mutate: submitNewTicket } = useMutation({
     mutationFn: createTicket,
@@ -94,25 +79,17 @@ const TicketForm = ({
     mode: "onChange",
   });
 
-  const assigneeNoChanges = assigneeDefaultValues
-    ? assigneeDefaultValues.map((item) => (item ? item.value : item))
-    : [];
-
   function onSubmit(values: FormType) {
     const newTicket = {
       ...values,
-      created_by: backendSession.user.pk,
+      created_by: member.id,
       team_space: teamSpaceId,
-      assignee: !form.formState.dirtyFields.assignee
-        ? assigneeNoChanges
-        : values.assignee,
     };
     if (!ticket) {
       submitNewTicket(
         {
-          access: backendSession.access,
+          access: access,
           ticket: {
-            assignee: newTicket.assignee as any,
             team_space: newTicket.team_space,
             created_by: newTicket.created_by,
             title: newTicket.title,
@@ -147,11 +124,9 @@ const TicketForm = ({
     } else {
       updateTicketInfo(
         {
-          access: backendSession.access,
+          access: access,
           ticket: {
-            assignee: newTicket.assignee as any,
-            team_space: newTicket.team_space,
-            created_by: newTicket.created_by,
+            id: ticket.id,
             title: newTicket.title,
             description: newTicket.description,
             starting_date: newTicket.starting_date
@@ -163,7 +138,6 @@ const TicketForm = ({
             priority: newTicket.priority,
             type: newTicket.type,
           },
-          ticketId: ticket.id,
         },
         {
           onSuccess: (values) => {
@@ -360,80 +334,6 @@ const TicketForm = ({
                 </Popover>
                 <FormMessage />
               </FormItem>
-            )}
-          />
-
-          <Controller
-            control={form.control}
-            name="assignee"
-            render={({ field: { onChange, value, ref } }) => (
-              <div className="space-y-[6px] col-span-full">
-                <FormLabel>Assignee</FormLabel>
-
-                <Select
-                  onChange={(val) => onChange(val.map((c) => c?.value))}
-                  options={assigneeOptions}
-                  isMulti
-                  defaultValue={assigneeDefaultValues}
-                  placeholder="Select assignee"
-                  styles={{
-                    control: (base) => ({
-                      ...base,
-                      borderColor: "#E2E8F0",
-                      borderRadius: "6px",
-                      boxShadow: "none",
-                      "&:hover": {
-                        borderColor: "#E2E8F0",
-                      },
-                    }),
-                    placeholder: (base) => ({
-                      ...base,
-                      color: "#0f172a",
-                      fontSize: "14px", // change this color to the one you want
-                    }),
-                    multiValue: (base) => ({
-                      ...base,
-                      background: "#f8fafc",
-                      borderRadius: "4px",
-                    }),
-                    multiValueLabel: (base) => ({
-                      ...base,
-                      fontSize: "14px", // change this size to the one you want
-                      background: "#f8fafc",
-                      color: "#0f172a",
-                      borderRadius: "4px",
-                    }),
-                    multiValueRemove: (base) => ({
-                      ...base,
-                      background: "#f8fafc",
-                      "&:hover": {
-                        backgroundColor: "#f1f5f9",
-                        color: "#0f172a",
-                      },
-                    }),
-                    option: (base, state) => ({
-                      ...base,
-                      padding: "6px",
-                      paddingLeft: "32px",
-                      fontSize: "14px",
-                      color: "#18181B",
-                      borderRadius: "4px",
-                      backgroundColor: state.isFocused ? "#f1f5f9" : "", // change this color to the one you want
-                      "&:active": {
-                        backgroundColor: "#f1f5f9",
-                      },
-                    }),
-                    menu: (base) => ({
-                      ...base,
-                      padding: "4px",
-                      gap: "16px",
-                    }),
-                  }}
-                />
-                <FormDescription>
-                  You can add/remove assignee later
-                </FormDescription>
-              </div>
             )}
           />
 

@@ -28,13 +28,8 @@ export const createTeamSpace = async ({
     );
     return data;
   } catch (error) {
-    if (isAxiosError(error)) {
-      console.log("error message createTeamSpace: ", error.message);
-      return null;
-    } else {
-      console.log("unexpected error createTeamSpace: ", error);
-      return null;
-    }
+    console.log("Create teamspace error: ", error);
+    return null;
   }
 };
 
@@ -52,13 +47,8 @@ export const getTeamSpaces = async ({ access }: GetTeamSpacesProps) => {
 
     return data;
   } catch (error) {
-    if (isAxiosError(error)) {
-      console.log("error message getTeamSpaces: ", error.message);
-      return null;
-    } else {
-      console.log("unexpected error getTeamSpaces: ", error);
-      return null;
-    }
+    console.log("Get team spaces error: ", error);
+    return null;
   }
 };
 
@@ -83,13 +73,8 @@ export const getTeamSpace = async ({
 
     return data;
   } catch (error) {
-    if (isAxiosError(error)) {
-      console.log("error message getTeamSpace: ", error.message);
-      return null;
-    } else {
-      console.log("unexpected error getTeamSpace: ", error);
-      return null;
-    }
+    console.log("Get team space error: ", error);
+    return null;
   }
 };
 
@@ -118,13 +103,8 @@ export const updateTeamSpace = async ({
     );
     return data;
   } catch (error) {
-    if (isAxiosError(error)) {
-      console.log("error message updateTeamSpace: ", error.message);
-      return null;
-    } else {
-      console.log("unexpected error updateTeamSpace: ", error);
-      return null;
-    }
+    console.log("Update team space error: ", error);
+    return null;
   }
 };
 
@@ -145,12 +125,7 @@ export const deleteTeamSpace = async ({
     });
     return status;
   } catch (error) {
-    if (isAxiosError(error)) {
-      console.log("error message updateTeamSpace: ", error.message);
-      return null;
-    } else {
-      console.log("unexpected error updateTeamSpace: ", error);
-      return null;
-    }
+    console.log("Delete team space error: ", error);
+    return null;
   }
 };

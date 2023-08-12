@@ -1,5 +1,10 @@
 import NextAuth from "next-auth/next";
-import { BackendSession } from ".";
+import { User } from ".";
+
+type BackendSession = {
+  access: string;
+  user: User;
+};
 
 declare module "next-auth" {
   interface Session {

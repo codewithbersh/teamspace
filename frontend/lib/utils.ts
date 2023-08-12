@@ -1,7 +1,6 @@
 import { Member, Ticket } from "@/types";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { GetMembersType } from "./axios/member";
 const { parseISO, format } = require("date-fns");
 
 export function cn(...inputs: ClassValue[]) {
@@ -65,7 +64,7 @@ type OptionsType = {
   hidden?: boolean;
 };
 
-export const getOptions = (role: GetMembersType["role"]) => {
+export const getOptions = (role: Member["role"]) => {
   const isHidden = role === "NA";
   const statuses: OptionsType[] = [
     {

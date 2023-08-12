@@ -42,7 +42,7 @@ const TeamSwitcher = ({ className, teamSpaces = [] }: Props) => {
 
   const onTeamSpaceSelect = (teamSpace: TeamSpace) => {
     setOpen(false);
-    router.push(`/teamspace/${teamSpace.id}`);
+    router.push(`/teamspace/${teamSpace.id}/tickets`);
   };
 
   return (

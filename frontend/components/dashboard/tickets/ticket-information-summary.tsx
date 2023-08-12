@@ -17,10 +17,10 @@ import {
   translateTicketStatus,
   translateTicketType,
 } from "@/lib/utils";
-import { TicketDetailed } from "@/types";
+import { Ticket } from "@/types";
 
 type Props = {
-  ticket: TicketDetailed;
+  ticket: Ticket;
 };
 
 const deadline = (input: any) =>

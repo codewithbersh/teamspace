@@ -1,9 +1,6 @@
 "use client";
 
-import { GetMembersType } from "@/lib/axios/member";
-import { translateMemberRole } from "@/lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -13,7 +10,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-export const columns: ColumnDef<GetMembersType>[] = [
+import { Member } from "@/types";
+import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+import { translateMemberRole } from "@/lib/utils";
+
+export const columns: ColumnDef<Member>[] = [
   {
     accessorKey: "is_verified",
     header: ({ column }) => {
@@ -35,7 +36,7 @@ export const columns: ColumnDef<GetMembersType>[] = [
   },
   {
     id: "email",
-    accessorKey: "user.email",
+    accessorKey: "user_detail.email",
     header: ({ column }) => {
       return (
         <Button
@@ -49,7 +50,7 @@ export const columns: ColumnDef<GetMembersType>[] = [
     },
   },
   {
-    accessorKey: "user.first_name",
+    accessorKey: "user_detail.first_name",
     header: ({ column }) => {
       return (
         <Button
@@ -62,7 +63,7 @@ export const columns: ColumnDef<GetMembersType>[] = [
       );
     },
     cell: ({ row }) => {
-      const user = row.original.user;
+      const user = row.original.user_detail;
       const first_name = user.first_name;
       const last_name = user.last_name;
       return `${first_name} ${last_name}`;

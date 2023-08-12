@@ -6,91 +6,87 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { CommentForm } from "./comment-form";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { TicketIssueAction } from "./ticket-issue-action";
-import { CommentForm } from "./comment-form";
 import { Comment } from "./comment";
-import {
-  BackendSession,
-  Comment as CommentType,
-  TicketDetailed,
-} from "@/types";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AssigneeAction } from "./assignee-action";
 
-import { GetMembersType } from "@/lib/axios/member";
+import { Member, Ticket } from "@/types";
 import { Terminal } from "lucide-react";
+import { Fragment } from "react";
+import { getTeamSpaceMembers } from "@/lib/axios/member";
 
 type Props = {
-  ticket: TicketDetailed;
-  backendSession: BackendSession;
-  teamSpaceMembers: GetMembersType[];
-  comments: CommentType[] | null;
+  ticket: Ticket;
+  member: Member;
+  access: string;
+  teamSpaceId: string;
 };
 
-const TicketInformationTable = ({
+const TicketInformationTable = async ({
+  access,
   ticket,
-  backendSession,
-  teamSpaceMembers,
-  comments,
+  member,
+  teamSpaceId,
 }: Props) => {
-  const member = teamSpaceMembers.find(
-    (member) => member.user.id === backendSession.user.pk
-  )!;
-
   const nonAdminDisabledInformation =
     ticket.status === "CO" && member.role === "NA";
+
+  const comments = ticket.comments;
+
+  const members = await getTeamSpaceMembers({ access, teamSpaceId });
+
+  if (!members) return null;
+
   return (
     <Table>
       <TableHeader>
         <TableRow>
           <TableHead className="w-[150px]">Title</TableHead>
-          <TableHead>Information</TableHead>
-          <TableHead className="text-right min-w-[200px]"></TableHead>
+          <TableHead className="min-w-[400px]">Information</TableHead>
+          <TableHead className="text-right min-w-[220px]"></TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         <TableRow>
-          <TableCell className="font-medium align-top translate-y-[10px]">
-            Issue
-          </TableCell>
+          <TableCell className="font-medium ">Issue</TableCell>
           <TableCell>{ticket.title}</TableCell>
           <TableCell className="text-right">
             <TicketIssueAction
               ticket={ticket}
-              backendSession={backendSession}
-              teamSpaceMembers={teamSpaceMembers}
+              access={access}
+              member={member}
             />
           </TableCell>
         </TableRow>
         <TableRow>
-          <TableCell className="font-medium align-top translate-y-[10px]">
-            Description
-          </TableCell>
+          <TableCell className="font-medium ">Description</TableCell>
           <TableCell>{ticket.description}</TableCell>
-          <TableCell className="text-right align-top translate-y-[10px]"></TableCell>
+          <TableCell className="text-right "></TableCell>
         </TableRow>
         <TableRow>
-          <TableCell className="font-medium align-top translate-y-[10px]">
-            Assignee
-          </TableCell>
+          <TableCell className="font-medium ">Assignee</TableCell>
           <TableCell>
-            {ticket.assignee?.length ? (
+            {ticket.assigned_members?.length ? (
               <div className="space-y-4">
-                {ticket.assignee.map((person) => (
-                  <div key={person.id} className="flex gap-4 items-center">
+                {ticket.assigned_members.map((assignee) => (
+                  <div key={assignee.id} className="flex gap-4 items-center">
                     <Avatar>
-                      <AvatarImage src={person.image_url} />
+                      <AvatarImage src={assignee.user_detail.image_url} />
                       <AvatarFallback className="text-base font-bold">
-                        {person.email[0].toUpperCase()}
+                        {assignee.user_detail.email[0].toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
 
                     <div className="space-y-1">
                       <h1 className="text-sm leading-none">
-                        {person.first_name} {person.last_name}
+                        {assignee.user_detail.first_name}{" "}
+                        {assignee.user_detail.last_name}
                       </h1>
                       <h1 className="text-muted-foreground text-sm leading-none">
-                        {person.email}
+                        {assignee.user_detail.email}
                       </h1>
                     </div>
                   </div>
@@ -100,12 +96,17 @@ const TicketInformationTable = ({
               "No assignee."
             )}
           </TableCell>
-          <TableCell className="text-right align-top translate-y-[10px]"></TableCell>
+          <TableCell className="text-right ">
+            <AssigneeAction
+              assignees={ticket.assigned_members}
+              members={members}
+              ticketId={ticket.id}
+              access={access}
+            />
+          </TableCell>
         </TableRow>
         <TableRow>
-          <TableCell className="font-medium align-top translate-y-[10px]">
-            Discussion
-          </TableCell>
+          <TableCell className="font-medium ">Discussion</TableCell>
           <TableCell>
             <div className="space-y-4">
               {!comments ? (
@@ -128,23 +129,22 @@ const TicketInformationTable = ({
                     </div>
                   )}
                   {comments.map((comment) => (
-                    <>
+                    <Fragment key={comment.id}>
                       <Comment
                         comment={comment}
                         member={member}
-                        access={backendSession.access}
-                        key={comment.id}
+                        access={access}
                         ticketStatus={ticket.status}
                       />
-                    </>
+                    </Fragment>
                   ))}
                 </>
               )}
             </div>
           </TableCell>
-          <TableCell className="text-right align-top translate-y-[10px]">
+          <TableCell className="text-right ">
             <CommentForm
-              access={backendSession.access}
+              access={access}
               member={member}
               ticketId={ticket.id}
               ticketStatus={ticket.status}
