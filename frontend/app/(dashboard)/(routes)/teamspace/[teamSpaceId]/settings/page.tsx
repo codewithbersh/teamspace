@@ -34,7 +34,8 @@ const SettingsPage = async ({ params: { teamSpaceId } }: Props) => {
     (member) => member.user === session.user.backendSession.user.id
   );
 
-  if (!member || member.role === "NA") notFound();
+  if (!member || member.role === "NA")
+    redirect(`/teamspace/${teamSpaceId}/tickets`);
 
   return (
     <div className="container space-y-12">

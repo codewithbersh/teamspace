@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 import { getTeamSpaceTickets } from "@/lib/axios/ticket";
 import { getCurrentSession } from "@/lib/session";
 import { Plus } from "lucide-react";
+import { getMember } from "@/lib/axios/member";
 
 type Props = {
   params: {
@@ -24,6 +25,13 @@ const TicketsPage = async ({ params: { teamSpaceId } }: Props) => {
   const tickets = await getTeamSpaceTickets({ access, teamSpaceId }).then(
     (ticket) => ticket?.filter((tx) => !tx.archived)
   );
+  const member = await getMember({
+    access,
+    teamSpaceId,
+    userId: session.user.backendSession.user.id,
+  });
+
+  if (!member) redirect("/login");
 
   return (
     <div className="container space-y-12">
@@ -31,13 +39,15 @@ const TicketsPage = async ({ params: { teamSpaceId } }: Props) => {
         title="Tickets"
         description="Manage and view tickets for this team space."
       >
-        <Link
-          href={`/teamspace/${teamSpaceId}/tickets/form`}
-          className={cn(buttonVariants(), "min-w-[125.47px] gap-2")}
-        >
-          <Plus className="w-[14px] h-[14px]" />
-          New ticket
-        </Link>
+        {member.role !== "NA" && (
+          <Link
+            href={`/teamspace/${teamSpaceId}/tickets/form`}
+            className={cn(buttonVariants(), "min-w-[125.47px] gap-2")}
+          >
+            <Plus className="w-[14px] h-[14px]" />
+            New ticket
+          </Link>
+        )}
       </PageHeader>
 
       <DataTable columns={columns} data={tickets ?? []} />
