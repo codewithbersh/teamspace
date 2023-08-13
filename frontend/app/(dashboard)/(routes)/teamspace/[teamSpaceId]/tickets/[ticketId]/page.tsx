@@ -1,14 +1,13 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import { TicketInformationSummary } from "@/components/dashboard/tickets/ticket-information-summary";
 import { PageHeader } from "@/components/dashboard/page-header";
-import { buttonVariants } from "@/components/ui/button";
 import { TicketInformationTable } from "@/components/dashboard/tickets/ticket-information-table";
+import { TicketOptionsDropdown } from "@/components/dashboard/tickets/ticket-options-dropdown";
+import { AlertTicketArchived } from "@/components/dashboard/tickets/alert-ticket-archived";
 
 import { getTicketInformation } from "@/lib/axios/ticket";
 import { getCurrentSession } from "@/lib/session";
-import { cn } from "@/lib/utils";
 import { getMember } from "@/lib/axios/member";
 
 type Props = {
@@ -45,23 +44,12 @@ const TicketInformationPage = async ({
         title="Ticket Information"
         description="View and update ticket"
       >
-        {member.role !== "NA" && (
-          <Link
-            href={{
-              pathname: `/teamspace/${teamSpaceId}/tickets/form`,
-              query: {
-                ticketId: ticketId,
-              },
-            }}
-            className={cn(buttonVariants(), "min-w-[99.14px]")}
-          >
-            Edit ticket
-          </Link>
-        )}
+        {member.role !== "NA" && <TicketOptionsDropdown ticket={ticket} />}
       </PageHeader>
 
-      <TicketInformationSummary ticket={ticket} />
+      <AlertTicketArchived ticket={ticket} member={member} />
 
+      <TicketInformationSummary ticket={ticket} member={member} />
       <TicketInformationTable
         ticket={ticket}
         member={member}

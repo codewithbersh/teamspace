@@ -62,7 +62,7 @@ const RemoveMemberModal = () => {
       isOpen={isOpen}
       onClose={onClose}
       title="Are you sure you want to remove this member?"
-      description="Removing members will also remove all of the members data in this team space."
+      description="Keep in mind that removing members will result in the deletion of all data associated with this member within the team space."
     >
       <div className="space-y-6">
         <div className="flex gap-4 items-center">

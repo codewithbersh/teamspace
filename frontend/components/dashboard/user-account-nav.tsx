@@ -41,12 +41,9 @@ const UserAccountNav = ({ member }: Props) => {
     <DropdownMenu>
       <DropdownMenuTrigger>
         <Avatar>
-          <AvatarImage
-            className="bg-slate-100"
-            src={member.user_detail.image_url}
-          />
-          <AvatarFallback className="bg-foreground">
-            <span className="text-lg font-bold text-accent">
+          <AvatarImage src={member.user_detail.image_url} />
+          <AvatarFallback>
+            <span className="text-lg font-bold">
               {member.user_detail.email[0].toUpperCase()}
             </span>
           </AvatarFallback>

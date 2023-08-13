@@ -5,6 +5,7 @@ import { TeamSpaceSettings } from "@/components/dashboard/settings/team-space-se
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MembersSettings } from "@/components/dashboard/settings/members-settings";
+import { ArchivedTicketsSettings } from "@/components/dashboard/settings/archived-tickets-settings";
 
 import { getTeamSpace } from "@/lib/axios/teamspace";
 import { getCurrentSession } from "@/lib/session";
@@ -39,17 +40,21 @@ const SettingsPage = async ({ params: { teamSpaceId } }: Props) => {
     <div className="container space-y-12">
       <PageHeader
         title="Settings"
-        description="View and manage team space members and settings."
+        description="View and manage team space members, archived tickets, and other settings."
       />
 
       <Tabs defaultValue="members" className="space-y-8">
         <TabsList>
           <TabsTrigger value="members">Members</TabsTrigger>
+          <TabsTrigger value="archived">Archived Tickets</TabsTrigger>
           <TabsTrigger value="teamspace">Team Space</TabsTrigger>
         </TabsList>
 
         <TabsContent value="members">
           <MembersSettings teamSpace={teamSpace} member={member} />
+        </TabsContent>
+        <TabsContent value="archived">
+          <ArchivedTicketsSettings teamSpaceId={teamSpaceId} />
         </TabsContent>
         <TabsContent value="teamspace">
           <TeamSpaceSettings

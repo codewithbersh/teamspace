@@ -182,3 +182,53 @@ export const getTeamSpaceTickets = async ({
     return undefined;
   }
 };
+
+type ArchiveTicketProps = {
+  access: string;
+  ticketId: string;
+  archived: boolean;
+};
+
+export const archiveTicket = async ({
+  access,
+  ticketId,
+  archived,
+}: ArchiveTicketProps) => {
+  try {
+    const { data } = await axiosApi.patch<Ticket>(
+      `tickets/${ticketId}/`,
+      {
+        archived,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${access}`,
+        },
+      }
+    );
+    return data;
+  } catch (error) {
+    console.log("Archive ticket error: ", error);
+    return null;
+  }
+};
+
+type DeleteTicketProps = {
+  access: string;
+  ticketId: string;
+};
+
+export const deleteTicket = async ({ access, ticketId }: DeleteTicketProps) => {
+  try {
+    const { status } = await axiosApi.delete(`tickets/${ticketId}/`, {
+      headers: {
+        Authorization: `Bearer ${access}`,
+      },
+    });
+
+    return status;
+  } catch (error) {
+    console.log("Delete ticket error: ", error);
+    return null;
+  }
+};

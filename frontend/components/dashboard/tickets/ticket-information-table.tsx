@@ -1,3 +1,5 @@
+import { Fragment } from "react";
+
 import {
   Table,
   TableBody,
@@ -15,7 +17,6 @@ import { AssigneeAction } from "./assignee-action";
 
 import { Member, Ticket } from "@/types";
 import { Terminal } from "lucide-react";
-import { Fragment } from "react";
 import { getTeamSpaceMembers } from "@/lib/axios/member";
 
 type Props = {
@@ -31,6 +32,8 @@ const TicketInformationTable = async ({
   member,
   teamSpaceId,
 }: Props) => {
+  if (ticket.archived && member.role === "NA") return null;
+
   const nonAdminDisabledInformation =
     ticket.status === "CO" && member.role === "NA";
 

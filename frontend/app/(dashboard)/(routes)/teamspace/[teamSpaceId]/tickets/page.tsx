@@ -1,14 +1,14 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 import { PageHeader } from "@/components/dashboard/page-header";
 import { buttonVariants } from "@/components/ui/button";
+import { DataTable } from "@/components/dashboard/tickets/table/data-table";
+import { columns } from "@/components/dashboard/tickets/table/columns";
 
 import { cn } from "@/lib/utils";
 import { getTeamSpaceTickets } from "@/lib/axios/ticket";
 import { getCurrentSession } from "@/lib/session";
-import { redirect } from "next/navigation";
-import { DataTable } from "@/components/dashboard/tickets/table/data-table";
-import { columns } from "@/components/dashboard/tickets/table/columns";
 
 type Props = {
   params: {
@@ -20,7 +20,10 @@ const TicketsPage = async ({ params: { teamSpaceId } }: Props) => {
   const session = await getCurrentSession();
   if (!session) redirect("/login");
   const access = session.user.backendSession.access;
-  const tickets = await getTeamSpaceTickets({ access, teamSpaceId });
+  const tickets = await getTeamSpaceTickets({ access, teamSpaceId }).then(
+    (ticket) => ticket?.filter((tx) => !tx.archived)
+  );
+
   return (
     <div className="container space-y-12">
       <PageHeader

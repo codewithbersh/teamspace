@@ -17,16 +17,18 @@ import {
   translateTicketStatus,
   translateTicketType,
 } from "@/lib/utils";
-import { Ticket } from "@/types";
+import { Member, Ticket } from "@/types";
 
 type Props = {
   ticket: Ticket;
+  member: Member;
 };
 
 const deadline = (input: any) =>
   input ? format(parseISO(input), "MMM do, yyyy") : null;
 
-const TicketInformationSummary = ({ ticket }: Props) => {
+const TicketInformationSummary = ({ ticket, member }: Props) => {
+  if (ticket.archived && member.role === "NA") return null;
   const summary = [
     {
       header: "Priority",
