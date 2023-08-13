@@ -50,7 +50,7 @@ export const columns: ColumnDef<Ticket>[] = [
           <Badge variant="outline" className="shrink-0">
             {formatted}
           </Badge>
-          <span className="min-w-[300px] max-w-[350px] line-clamp-1 font-medium">
+          <span className="min-w-[300px] line-clamp-1 max-w-[350px] font-medium">
             {row.original.title}
           </span>
         </div>
@@ -155,7 +155,6 @@ export const columns: ColumnDef<Ticket>[] = [
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
               <MoreHorizontal className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>

@@ -1,4 +1,4 @@
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 import { TicketInformationSummary } from "@/components/dashboard/tickets/ticket-information-summary";
 import { PageHeader } from "@/components/dashboard/page-header";
@@ -36,7 +36,8 @@ const TicketInformationPage = async ({
     userId: session.user.backendSession.user.id,
   });
 
-  if (!ticket || !member) redirect(`/teamspace/${teamSpaceId}`);
+  if (!ticket) notFound();
+  if (!member) redirect(`/teamspace/${teamSpaceId}`);
 
   return (
     <div className="container space-y-12">
