@@ -9,6 +9,7 @@ import { columns } from "@/components/dashboard/tickets/table/columns";
 import { cn } from "@/lib/utils";
 import { getTeamSpaceTickets } from "@/lib/axios/ticket";
 import { getCurrentSession } from "@/lib/session";
+import { Plus } from "lucide-react";
 
 type Props = {
   params: {
@@ -32,8 +33,9 @@ const TicketsPage = async ({ params: { teamSpaceId } }: Props) => {
       >
         <Link
           href={`/teamspace/${teamSpaceId}/tickets/form`}
-          className={cn(buttonVariants(), "min-w-[103.47px]")}
+          className={cn(buttonVariants(), "min-w-[125.47px] gap-2")}
         >
+          <Plus className="w-[14px] h-[14px]" />
           New ticket
         </Link>
       </PageHeader>
