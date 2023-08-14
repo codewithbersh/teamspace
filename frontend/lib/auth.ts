@@ -81,11 +81,14 @@ export const authOptions: NextAuthOptions = {
       if (account.provider === "credentials") {
         if (!credentials) return false;
         const { email, password } = credentials as CredentialsInput;
+        console.log("Email: ", email);
+        console.log("Password: ", password);
         const backendSession = await getDemoBackendSession({
           email: email,
           password: password,
         });
 
+        console.log("Backend Session: ", backendSession);
         if (!backendSession) {
           return false;
         }
