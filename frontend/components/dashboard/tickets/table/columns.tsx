@@ -94,7 +94,7 @@ export const columns: ColumnDef<Ticket>[] = [
               className={cn(
                 index === 1 && "-translate-x-1/3",
                 index === 2 && "-translate-x-2/3",
-                "bg-slate-50 border border-slate-100"
+                "bg-slate-100 border-2 border-slate-200"
               )}
             >
               <AvatarImage src={member.user_detail.image_url} />
