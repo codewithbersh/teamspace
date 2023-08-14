@@ -30,7 +30,10 @@ SECRET_KEY = "django-insecure-c50f%++g)k=3$!n8!dgvzzlhng1+r7xce-!jd=_8+$4xs$qmmb
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["teamspace-production.up.railway.app"]
+ALLOWED_HOSTS = [
+    "teamspace-production.up.railway.app",
+    "https://teamspace-lac.vercel.app",
+]
 
 
 # Application definition
@@ -113,9 +116,13 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8000",
     "https://teamspace-production.up.railway.app",
+    "https://teamspace-lac.vercel.app",
 ]
 
-CSRF_TRUSTED_ORIGINS = ["https://teamspace-production.up.railway.app"]
+CSRF_TRUSTED_ORIGINS = [
+    "https://teamspace-production.up.railway.app",
+    "https://teamspace-lac.vercel.app",
+]
 
 
 ROOT_URLCONF = "backend.urls"
