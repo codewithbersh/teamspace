@@ -65,7 +65,8 @@ export const columns: ColumnDef<Ticket>[] = [
               code === "PE" && "bg-slate-50 text-slate-600",
               code === "IP" && "bg-blue-50 text-blue-600",
               code === "CO" && "bg-green-50 text-green-600",
-              code === "FR" && "bg-yellow-50 text-yellow-600"
+              code === "FR" && "bg-yellow-50 text-yellow-600",
+              code === "RO" && "bg-red-50 text-red-600"
             )}
           >
             {formatted}
