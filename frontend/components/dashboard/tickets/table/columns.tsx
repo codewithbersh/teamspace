@@ -1,17 +1,11 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { ColumnDef } from "@tanstack/react-table";
 
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { ColumnsActionCell } from "./columns-action-cell";
 
 import {
   cn,
@@ -19,8 +13,8 @@ import {
   translateTicketStatus,
   translateTicketType,
 } from "@/lib/utils";
+import { ArrowUpDown } from "lucide-react";
 import { Ticket } from "@/types";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 
 export const columns: ColumnDef<Ticket>[] = [
   {
@@ -147,32 +141,6 @@ export const columns: ColumnDef<Ticket>[] = [
   },
   {
     id: "actions",
-    cell: ({ row }) => {
-      const router = useRouter();
-      const ticket = row.original;
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem
-              onSelect={() => router.push(`tickets/${ticket.id}`)}
-            >
-              View details
-            </DropdownMenuItem>
-
-            <DropdownMenuItem
-              onSelect={() => router.push(`tickets/form?ticketId=${ticket.id}`)}
-            >
-              Edit ticket
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
+    cell: ({ row }) => <ColumnsActionCell row={row} />,
   },
 ];

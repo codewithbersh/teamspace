@@ -69,6 +69,7 @@ const CommentForm = ({
     } else {
       form.setValue("description", "");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [comment]);
 
   const { mutate: addCommentMutate } = useMutation({

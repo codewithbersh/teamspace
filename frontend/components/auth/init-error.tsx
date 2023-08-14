@@ -14,7 +14,7 @@ const InitError = () => {
         </div>
         <div className="space-y-4">
           <h1 className="font-bold text-3xl sm:text-center">
-            Oops, We're Just Warming Up!
+            Oops, We&apos;re Just Warming Up!
           </h1>
           <p className="text-muted-foreground sm:text-lg max-w-prose sm:text-center sm:mx-auto">
             Our free-tier backend services momentarily and are{" "}

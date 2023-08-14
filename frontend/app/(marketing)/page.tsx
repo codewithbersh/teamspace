@@ -45,7 +45,7 @@ const MarketingPage = async () => {
         </p>
         <Button className="!mt-4" asChild>
           <Link href="/login">
-            Get Started — <span className="italic">it's free</span>
+            Get Started — <span className="italic">it&apos;s free</span>
           </Link>
         </Button>
       </section>
@@ -63,7 +63,7 @@ const MarketingPage = async () => {
           </div>
           <div className="grid gap-4 sm:grid-cols-2 !max-w-3xl mx-auto">
             {features.map((feature) => (
-              <Card className="text-start">
+              <Card key={feature.title} className="text-start">
                 <CardContent className="p-4">
                   <div className="p-2 rounded-full bg-foreground w-fit">
                     <feature.icon className="h-6 w-6 text-accent" />

@@ -48,8 +48,10 @@ export function AssigneeAction({
   const router = useRouter();
 
   const { toast } = useToast();
+
   React.useEffect(() => {
     setSelectedMembers(assignees);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
   const { mutate } = useMutation({
