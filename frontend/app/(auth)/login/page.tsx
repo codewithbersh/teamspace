@@ -3,14 +3,18 @@ import { redirect } from "next/navigation";
 
 import { UserAuthForm } from "@/components/auth/user-auth-form";
 import { buttonVariants } from "@/components/ui/button";
+import InitError from "@/components/auth/init-error";
 
 import { ChevronLeft } from "lucide-react";
 import { getCurrentSession } from "@/lib/session";
 import { cn } from "@/lib/utils";
+import { initializeBackend } from "@/lib/axios/axios";
 
 const LoginPage = async () => {
   const session = await getCurrentSession();
   if (session) redirect("/teamspace");
+  const init = await initializeBackend();
+  if (!init) return <InitError />;
 
   return (
     <div className="relative min-h-screen min-w-screen">

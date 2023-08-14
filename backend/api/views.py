@@ -1,4 +1,4 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, views
 from rest_framework.permissions import IsAuthenticated
 from accounts.models import User
 from .models import TeamSpace, Member, Ticket, Comment, Assignee
@@ -148,3 +148,8 @@ class AssigneeViewSet(viewsets.ModelViewSet):
                 created_data.append(serializer.data)
 
         return Response(created_data, status=status.HTTP_201_CREATED)
+
+
+class InitializeBackendViewSet(views.APIView):
+    def get(self, request, format=None):
+        return Response(True)

@@ -1,3 +1,4 @@
+from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import (
     UserViewSet,
@@ -6,6 +7,7 @@ from .views import (
     TicketViewSet,
     CommentViewSet,
     AssigneeViewSet,
+    InitializeBackendViewSet,
 )
 
 router = DefaultRouter()
@@ -17,4 +19,8 @@ router.register(r"tickets", TicketViewSet, basename="ticket")
 router.register(r"comments", CommentViewSet, basename="comment")
 router.register(r"assignees", AssigneeViewSet, basename="assignee")
 
-urlpatterns = router.urls
+
+urlpatterns = [
+    path("", include(router.urls)),
+    path("init/", InitializeBackendViewSet.as_view(), name="init-backend"),
+]
