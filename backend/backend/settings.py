@@ -115,7 +115,7 @@ CORS_ALLOWED_ORIGINS = [
     "https://teamspace-production.up.railway.app",
 ]
 
-CSRF_TRUSTED_ORIGINS = ["teamspace-production.up.railway.app"]
+CSRF_TRUSTED_ORIGINS = ["https://teamspace-production.up.railway.app"]
 
 
 ROOT_URLCONF = "backend.urls"
