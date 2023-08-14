@@ -40,7 +40,7 @@ const UserAccountNav = ({ member }: Props) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <Avatar>
+        <Avatar className="bg-slate-50 border border-slate-100">
           <AvatarImage src={member.user_detail.image_url} />
           <AvatarFallback>
             <span className="text-lg font-bold">

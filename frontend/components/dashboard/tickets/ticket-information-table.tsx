@@ -82,7 +82,7 @@ const TicketInformationTable = async ({
               <div className="space-y-4">
                 {ticket.assigned_members.map((assignee) => (
                   <div key={assignee.id} className="flex gap-4 items-center">
-                    <Avatar>
+                    <Avatar className="bg-slate-50 border border-slate-100">
                       <AvatarImage src={assignee.user_detail.image_url} />
                       <AvatarFallback className="text-base font-bold">
                         {assignee.user_detail.email[0].toUpperCase()}

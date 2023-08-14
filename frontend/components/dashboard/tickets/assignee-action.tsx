@@ -174,7 +174,7 @@ export function AssigneeAction({
                 {selectedMembers.map((member) => (
                   <Avatar
                     key={member.user_detail.email}
-                    className="inline-block border-2 border-background"
+                    className="inline-block bg-slate-50 border border-slate-100"
                   >
                     <AvatarImage src={member.user_detail.image_url} />
                     <AvatarFallback>
