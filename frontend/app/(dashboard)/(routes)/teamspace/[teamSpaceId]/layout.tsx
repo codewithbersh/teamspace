@@ -30,7 +30,7 @@ const DashboardLayout = async ({
   return (
     <section>
       <Navbar teamSpaceId={teamSpaceId} />
-      {children}
+      <div className="pb-12">{children}</div>
     </section>
   );
 };
