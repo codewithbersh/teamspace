@@ -27,6 +27,7 @@ import { teamSpaceSchema } from "@/lib/schema";
 import { updateTeamSpace } from "@/lib/axios/teamspace";
 import { Member, TeamSpace } from "@/types";
 import { cn } from "@/lib/utils";
+import { Loader2 } from "lucide-react";
 
 type FormType = z.infer<typeof teamSpaceSchema>;
 
@@ -39,7 +40,7 @@ type Props = {
 const TeamSpaceSettings = ({ teamSpace, session, member }: Props) => {
   const router = useRouter();
   const { toast } = useToast();
-  const { mutate } = useMutation({
+  const { mutate, isLoading } = useMutation({
     mutationFn: updateTeamSpace,
   });
 
@@ -85,6 +86,8 @@ const TeamSpaceSettings = ({ teamSpace, session, member }: Props) => {
     navigator.clipboard.writeText(teamSpace.code);
     toast({ description: "Code copied to clipboard." });
   };
+
+  const buttonText = isLoading ? "Saving Changes" : "Save Changes";
 
   return (
     <div className="max-w-[400px] space-y-8">
@@ -138,8 +141,15 @@ const TeamSpaceSettings = ({ teamSpace, session, member }: Props) => {
               </FormItem>
             )}
           />
-          <Button type="submit" disabled={isEdited}>
-            Save changes
+          <Button
+            type="submit"
+            disabled={isEdited || isLoading}
+            className="gap-2"
+          >
+            {isLoading && (
+              <Loader2 className="w-[14px] h-[14px] animate-spin" />
+            )}
+            {buttonText}
           </Button>
         </form>
       </Form>

@@ -33,9 +33,9 @@ const MarketingLayout = ({ children }: Props) => {
           <Link
             className="underline underline-offset-2"
             target="_blank"
-            href="https://render.com"
+            href="https://railway.app"
           >
-            Render
+            Railway
           </Link>
           .
         </p>

@@ -26,7 +26,7 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 
 import { Member } from "@/types";
-import { Check, Users } from "lucide-react";
+import { Check, Loader2, Users } from "lucide-react";
 import { addAssignees } from "@/lib/axios/assignee";
 
 type AssigneeActionProps = {
@@ -54,7 +54,7 @@ export function AssigneeAction({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
-  const { mutate } = useMutation({
+  const { mutate, isLoading } = useMutation({
     mutationFn: addAssignees,
   });
 
@@ -87,6 +87,8 @@ export function AssigneeAction({
       }
     );
   };
+
+  const buttonText = isLoading ? "Saving Changes" : "Save Changes";
 
   return (
     <>
@@ -186,7 +188,16 @@ export function AssigneeAction({
                 Select members to add to this ticket.
               </p>
             )}
-            <Button onClick={() => onSubmit()}>Save changes</Button>
+            <Button
+              onClick={() => onSubmit()}
+              className="gap-2"
+              disabled={isLoading}
+            >
+              {isLoading && (
+                <Loader2 className="w-[14px] h-[14px] animate-spin" />
+              )}
+              {buttonText}
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

@@ -109,7 +109,7 @@ const UserAuthForm = () => {
           {isDemoAdminLoading && (
             <Loader2 className="w-[14px] h-[14px] animate-spin" />
           )}
-          As admin
+          As Admin
         </Button>
         <Button
           variant="outline"
@@ -120,7 +120,7 @@ const UserAuthForm = () => {
           {isDemoNonadminLoading && (
             <Loader2 className="w-[14px] h-[14px] animate-spin" />
           )}
-          As non-admin
+          As Developer
         </Button>
       </div>
     </div>

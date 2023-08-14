@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
@@ -9,6 +10,11 @@ import { ChevronLeft } from "lucide-react";
 import { getCurrentSession } from "@/lib/session";
 import { cn } from "@/lib/utils";
 import { initializeBackend } from "@/lib/axios/axios";
+
+export const metadata: Metadata = {
+  title: "Team Space | Login",
+  description: "Login Page",
+};
 
 const LoginPage = async () => {
   const session = await getCurrentSession();

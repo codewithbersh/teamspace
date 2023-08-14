@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 import { PageHeader } from "@/components/dashboard/page-header";
@@ -6,6 +7,11 @@ import { TicketForm } from "@/components/dashboard/tickets/ticket-form";
 import { getMember } from "@/lib/axios/member";
 import { getTicket } from "@/lib/axios/ticket";
 import { getCurrentSession } from "@/lib/session";
+
+export const metadata: Metadata = {
+  title: "Team Space | Ticket Form",
+  description: "Edit or Create Ticket",
+};
 
 type Props = {
   params: {

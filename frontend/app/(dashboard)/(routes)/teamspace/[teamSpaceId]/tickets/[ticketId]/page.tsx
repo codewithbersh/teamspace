@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 
 import { TicketInformationSummary } from "@/components/dashboard/tickets/ticket-information-summary";
@@ -9,6 +10,11 @@ import { AlertTicketArchived } from "@/components/dashboard/tickets/alert-ticket
 import { getTicketInformation } from "@/lib/axios/ticket";
 import { getCurrentSession } from "@/lib/session";
 import { getMember } from "@/lib/axios/member";
+
+export const metadata: Metadata = {
+  title: "Team Space | Ticket Information",
+  description: "Ticket Information Page",
+};
 
 type Props = {
   params: {

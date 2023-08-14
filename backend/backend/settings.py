@@ -29,11 +29,13 @@ SECRET_KEY = "django-insecure-c50f%++g)k=3$!n8!dgvzzlhng1+r7xce-!jd=_8+$4xs$qmmb
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+# DEBUG = False
 
 ALLOWED_HOSTS = [
     "teamspace-production.up.railway.app",
     "https://teamspace-lac.vercel.app",
     "http://localhost:3000",
+    "127.0.0.1",
 ]
 
 
@@ -152,18 +154,28 @@ WSGI_APPLICATION = "backend.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-# DATABASES = {"default": dj_database_url.parse(env("DATABASE_URL"))}
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": env("PG_DATABASE"),
+#         "USER": env("PG_USER"),
+#         "PASSWORD": env("PG_PASSWORD"),
+#         "HOST": env("PG_HOST"),
+#         "PORT": env("PG_PORT"),
+#     }
+# }
 
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": env("PG_DATABASE"),
-        "USER": env("PG_USER"),
-        "PASSWORD": env("PG_PASSWORD"),
-        "HOST": env("PG_HOST"),
-        "PORT": env("PG_PORT"),
+        "NAME": "teamspace",
+        "USER": "bersh",
+        "PASSWORD": "124398",
+        "HOST": "localhost",
+        "PORT": "5432",
     }
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators

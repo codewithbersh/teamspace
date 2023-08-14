@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -6,6 +7,12 @@ import { Card, CardContent } from "@/components/ui/card";
 
 import { Fingerprint, Smartphone, Users, VenetianMask } from "lucide-react";
 import Balancer from "react-wrap-balancer";
+import TeamSpaceMockup from "@/public/teamspace-mockup.png";
+
+export const metadata: Metadata = {
+  title: "Team Space | Home",
+  description: "Marketing Page",
+};
 
 const features = [
   {
@@ -53,12 +60,11 @@ const MarketingPage = async () => {
         <div className="space-y-8 md:-translate-y-60">
           <div className=" mx-auto !max-w-3xl">
             <Image
-              src="/teamspace-mockup.png"
-              width={3072}
-              height={1729}
+              src={TeamSpaceMockup}
               alt="Team Space Mockup"
               sizes="100vw"
               priority
+              placeholder="blur"
             />
           </div>
           <div className="grid gap-4 sm:grid-cols-2 !max-w-3xl mx-auto">

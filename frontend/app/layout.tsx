@@ -1,14 +1,16 @@
 import "@/styles/globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { cn } from "@/lib/utils";
+
 import Providers from "@/components/providers/providers";
 import { Toaster } from "@/components/ui/toaster";
+
+import { cn } from "@/lib/utils";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "teamspace",
+  title: "Team Space",
   description: "Your ultimate project management tool",
 };
 

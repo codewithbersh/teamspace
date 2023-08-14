@@ -32,14 +32,14 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
+import { useToast } from "@/components/ui/use-toast";
 
 import { PRIORITY_CHOICES, TYPE_CHOICES } from "./config";
 import { cn, formatDate } from "@/lib/utils";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Loader2 } from "lucide-react";
 import { Member, Ticket } from "@/types";
 import { createTicket, updateTicket } from "@/lib/axios/ticket";
 import { format } from "date-fns";
-import { useToast } from "@/components/ui/use-toast";
 
 type FormType = z.infer<typeof ticketSchema>;
 
@@ -54,13 +54,15 @@ const TicketForm = ({ ticket, access, teamSpaceId, member }: Props) => {
   const { toast } = useToast();
   const router = useRouter();
 
-  const { mutate: submitNewTicket } = useMutation({
+  const { mutate: submitNewTicket, isLoading: isCreatingTicket } = useMutation({
     mutationFn: createTicket,
   });
 
-  const { mutate: updateTicketInfo } = useMutation({
-    mutationFn: updateTicket,
-  });
+  const { mutate: updateTicketInfo, isLoading: isUpdatingTicket } = useMutation(
+    {
+      mutationFn: updateTicket,
+    }
+  );
 
   const form = useForm<FormType>({
     resolver: zodResolver(ticketSchema),
@@ -160,7 +162,13 @@ const TicketForm = ({ ticket, access, teamSpaceId, member }: Props) => {
   }
 
   const startingDateCurrentValue = form.watch("starting_date");
-  const buttonText = ticket ? "Save changes" : "Submit ticket";
+  const buttonText = ticket
+    ? isUpdatingTicket
+      ? "Saving Changes"
+      : "Save Changes"
+    : isCreatingTicket
+    ? "Creating Ticket"
+    : "Create Ticket";
 
   return (
     <div>
@@ -337,7 +345,14 @@ const TicketForm = ({ ticket, access, teamSpaceId, member }: Props) => {
             )}
           />
 
-          <Button type="submit" className="w-fit col-span-full">
+          <Button
+            type="submit"
+            className="w-fit col-span-full gap-2"
+            disabled={isCreatingTicket || isUpdatingTicket}
+          >
+            {(isUpdatingTicket || isCreatingTicket) && (
+              <Loader2 className="w-[14px] h-[14px] animate-spin" />
+            )}
             {buttonText}
           </Button>
         </form>

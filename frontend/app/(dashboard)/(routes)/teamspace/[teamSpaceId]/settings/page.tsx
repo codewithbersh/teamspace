@@ -1,4 +1,5 @@
-import { notFound, redirect } from "next/navigation";
+import { Metadata } from "next";
+import { redirect } from "next/navigation";
 
 import { PageHeader } from "@/components/dashboard/page-header";
 import { TeamSpaceSettings } from "@/components/dashboard/settings/team-space-settings";
@@ -9,6 +10,11 @@ import { ArchivedTicketsSettings } from "@/components/dashboard/settings/archive
 
 import { getTeamSpace } from "@/lib/axios/teamspace";
 import { getCurrentSession } from "@/lib/session";
+
+export const metadata: Metadata = {
+  title: "Team Space | Settings",
+  description: "Settings Page",
+};
 
 type Props = {
   params: {

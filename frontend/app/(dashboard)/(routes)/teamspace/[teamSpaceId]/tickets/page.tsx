@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { Metadata } from "next";
 
 import { PageHeader } from "@/components/dashboard/page-header";
 import { buttonVariants } from "@/components/ui/button";
@@ -11,6 +12,11 @@ import { getTeamSpaceTickets } from "@/lib/axios/ticket";
 import { getCurrentSession } from "@/lib/session";
 import { Plus } from "lucide-react";
 import { getMember } from "@/lib/axios/member";
+
+export const metadata: Metadata = {
+  title: "Team Space | Tickets",
+  description: "Tickets Page",
+};
 
 type Props = {
   params: {

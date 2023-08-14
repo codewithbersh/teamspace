@@ -30,7 +30,7 @@ import { useToast } from "@/components/ui/use-toast";
 
 import { ticketCommentSchema } from "@/lib/schema";
 import { addComment, updateComment } from "@/lib/axios/comment";
-import { MessageSquarePlus } from "lucide-react";
+import { Loader2, MessageSquarePlus } from "lucide-react";
 import { useCommentModal } from "@/hooks/use-comment-modal";
 import { Member, Ticket } from "@/types";
 
@@ -72,13 +72,15 @@ const CommentForm = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [comment]);
 
-  const { mutate: addCommentMutate } = useMutation({
-    mutationFn: addComment,
-  });
+  const { mutate: addCommentMutate, isLoading: isCreatingComment } =
+    useMutation({
+      mutationFn: addComment,
+    });
 
-  const { mutate: updateCommentMutate } = useMutation({
-    mutationFn: updateComment,
-  });
+  const { mutate: updateCommentMutate, isLoading: isUpdatingComment } =
+    useMutation({
+      mutationFn: updateComment,
+    });
 
   function onSubmit(values: FormType) {
     const newComment = {
@@ -142,7 +144,13 @@ const CommentForm = ({
     }
   };
 
-  const buttonText = comment ? "Save changes" : "Add comment";
+  const buttonText = comment
+    ? isUpdatingComment
+      ? "Saving Changes"
+      : "Save Changes"
+    : isCreatingComment
+    ? "Creating Comment"
+    : "Create Comment";
   const formLabelText = comment ? "Edit comment" : "Add comment";
   const isUserAssigned = assignedMembers.find((user) => user.id === member.id);
   const disabled = member.role !== "NA" ? false : isUserAssigned ? false : true;
@@ -177,7 +185,14 @@ const CommentForm = ({
                 )}
               />
               <div className="flex w-full">
-                <Button type="submit" className="ml-auto">
+                <Button
+                  type="submit"
+                  className="ml-auto gap-2"
+                  disabled={isCreatingComment || isUpdatingComment}
+                >
+                  {(isCreatingComment || isUpdatingComment) && (
+                    <Loader2 className="w-[14px] h-[14px] animate-spin" />
+                  )}
                   {buttonText}
                 </Button>
               </div>
