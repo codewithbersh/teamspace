@@ -12,8 +12,8 @@ const UserAuthForm = () => {
 
   const handleDemoAdmin = () => {
     signIn("credentials", {
-      email: process.env.DEMO_ADMIN_EMAIL,
-      password: process.env.DEMO_ADMIN_PASSWORD,
+      email: process.env.NEXT_PUBLIC_DEMO_ADMIN_EMAIL,
+      password: process.env.NEXT_PUBLIC_DEMO_ADMIN_PASSWORD,
       callbackUrl: "/teamspace",
     });
     setIsDemoAdminLoading(true);
@@ -21,8 +21,8 @@ const UserAuthForm = () => {
 
   const handleDemoNonadmin = () => {
     signIn("credentials", {
-      email: process.env.DEMO_NONADMIN_EMAIL,
-      password: process.env.DEMO_NONADMIN_PASSWORD,
+      email: process.env.NEXT_PUBLIC_DEMO_NONADMIN_EMAIL,
+      password: process.env.NEXT_PUBLIC_DEMO_NONADMIN_PASSWORD,
       callbackUrl: "/teamspace",
     });
     setIsDemoNonadminLoading(true);
