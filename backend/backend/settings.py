@@ -33,6 +33,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
     "teamspace-production.up.railway.app",
     "https://teamspace-lac.vercel.app",
+    "http://localhost:3000",
 ]
 
 
@@ -117,11 +118,13 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:8000",
     "https://teamspace-production.up.railway.app",
     "https://teamspace-lac.vercel.app",
+    "http://localhost:3000",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     "https://teamspace-production.up.railway.app",
     "https://teamspace-lac.vercel.app",
+    "http://localhost:3000",
 ]
 
 
