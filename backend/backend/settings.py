@@ -110,7 +110,10 @@ MIDDLEWARE = [
     "simple_history.middleware.HistoryRequestMiddleware",
 ]
 
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8000",
+    "https://teamspace-production.up.railway.app",
+]
 
 ROOT_URLCONF = "backend.urls"
 
