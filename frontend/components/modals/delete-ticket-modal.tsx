@@ -11,7 +11,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { deleteTicket } from "@/lib/axios/ticket";
 import { useDeleteTicketModal } from "@/hooks/use-delete-ticket-modal";
 import { DEMO_TICKETS } from "@/lib/demo-tickets";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, Loader2 } from "lucide-react";
 
 const DeleteTicketModal = () => {
   const { onClose, isOpen, ticket, setTicket } = useDeleteTicketModal();
@@ -19,7 +19,7 @@ const DeleteTicketModal = () => {
   const { toast } = useToast();
   const router = useRouter();
 
-  const { mutate } = useMutation({
+  const { mutate, isLoading } = useMutation({
     mutationFn: deleteTicket,
   });
   if (!ticket) return null;
@@ -73,14 +73,14 @@ const DeleteTicketModal = () => {
       title={title}
       description={description}
     >
-      <div className="pt-2">
+      <div className="pt-2 space-y-6">
         {isDemoTicket && (
           <Alert variant="destructive">
             <AlertCircle className="h-4 w-4" />
             <AlertTitle>Heads up!</AlertTitle>
             <AlertDescription>
-              You are trying to delete a demo ticket. Demo tickets cannot be
-              deleted.
+              You are attempting to delete a demo ticket. Demo tickets are not
+              deletable.
             </AlertDescription>
           </Alert>
         )}
@@ -92,8 +92,12 @@ const DeleteTicketModal = () => {
           <Button
             variant="destructive"
             onClick={() => handleSelectAccept()}
-            disabled={isDemoTicket}
+            disabled={isDemoTicket || isLoading}
+            className="gap-2"
           >
+            {isLoading && (
+              <Loader2 className="w-[14px] h-[14px] animate-spin" />
+            )}
             {acceptButtonText}
           </Button>
         </DialogFooter>

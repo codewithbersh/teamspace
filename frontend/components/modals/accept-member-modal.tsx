@@ -7,9 +7,12 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 import { updateMember } from "@/lib/axios/member";
 import { useAcceptMemberModal } from "@/hooks/use-accept-member-modal";
+import { DEMO_ACCOUNTS } from "@/lib/demo-tickets";
+import { AlertCircle } from "lucide-react";
 
 const AcceptMemberModal = () => {
   const { onClose, isOpen, member, setMember } = useAcceptMemberModal();
@@ -64,6 +67,8 @@ const AcceptMemberModal = () => {
       }
     );
   };
+
+  const isDemoAccount = DEMO_ACCOUNTS.includes(member.user);
   return (
     <DialogModal
       isOpen={isOpen}
@@ -89,11 +94,21 @@ const AcceptMemberModal = () => {
             </p>
           </div>
         </div>
+        {isDemoAccount && (
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Heads up!</AlertTitle>
+            <AlertDescription>
+              You are trying to modify the role of a demo account. Demo accounts
+              cannot be updated in this context.
+            </AlertDescription>
+          </Alert>
+        )}
         <DialogFooter>
           <Button variant="outline" onClick={() => handleSelectCancel()}>
             Cancel
           </Button>
-          <Button onClick={() => handleSelectAccept()}>
+          <Button onClick={() => handleSelectAccept()} disabled={isDemoAccount}>
             {acceptButtonText}
           </Button>
         </DialogFooter>

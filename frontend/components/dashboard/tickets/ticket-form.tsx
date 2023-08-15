@@ -174,7 +174,7 @@ const TicketForm = ({ ticket, access, teamSpaceId, member }: Props) => {
   const isDemoTicket = ticket ? DEMO_TICKETS.includes(ticket.id) : false;
 
   return (
-    <div>
+    <div className="space-y-8">
       {isDemoTicket && (
         <Alert variant="destructive" className="max-w-[600px]">
           <AlertCircle className="h-4 w-4" />
