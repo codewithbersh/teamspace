@@ -4,24 +4,24 @@
 
 Team Space is a web-based project management application designed to streamline team collaboration. Members can interact, manage, and oversee project tickets ranging from issues to feature requests and improvements.
 
-## 🚀 Features
+## Features
 
-### 🛂 Authentication:
+### Authentication:
 
 - Secure user authentication via NextAuth with Google. Ensure you have a Google account for seamless sign-in.
 
-### 🌐 User Dashboard:
+### User Dashboard:
 
 - On initial login, users are prompted to either **JOIN** or **CREATE** a team space.
 - For joining an existing team space, users need to input an invitation code, shared by the space's administrator or owner.
 - Post-authentication, users navigate to the **Tickets** page or the **Settings** page, depending on their access level.
 
-### 🎟 Tickets:
+### Tickets:
 
 - Users can **CREATE**, **UPDATE**, or **DELETE** tickets based on their role access.
 - Tickets categorize into: **Issue**, **Feature Request**, or **Improvement**.
 
-### 🧑‍💼 User Roles:
+### User Roles:
 
 - **Developer**:
   - View all tickets.
@@ -44,7 +44,7 @@ Team Space is a web-based project management application designed to streamline 
   - Add or remove admins.
   - Delete the entire team space.
 
-## 🛠 Technologies Used
+## Technologies Used
 
 ### Backend:
 
