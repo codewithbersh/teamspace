@@ -11,7 +11,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -33,13 +32,15 @@ import {
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { useToast } from "@/components/ui/use-toast";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 import { PRIORITY_CHOICES, TYPE_CHOICES } from "./config";
 import { cn, formatDate } from "@/lib/utils";
-import { CalendarIcon, Loader2 } from "lucide-react";
+import { AlertCircle, CalendarIcon, Loader2 } from "lucide-react";
 import { Member, Ticket } from "@/types";
 import { createTicket, updateTicket } from "@/lib/axios/ticket";
 import { format } from "date-fns";
+import { DEMO_TICKETS } from "@/lib/demo-tickets";
 
 type FormType = z.infer<typeof ticketSchema>;
 
@@ -170,8 +171,20 @@ const TicketForm = ({ ticket, access, teamSpaceId, member }: Props) => {
     ? "Creating Ticket"
     : "Create Ticket";
 
+  const isDemoTicket = ticket ? DEMO_TICKETS.includes(ticket.id) : false;
+
   return (
     <div>
+      {isDemoTicket && (
+        <Alert variant="destructive" className="max-w-[600px]">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Heads up!</AlertTitle>
+          <AlertDescription>
+            Please note that this is a demo ticket for demonstration purposes
+            only. The title and description are not editable in this context.
+          </AlertDescription>
+        </Alert>
+      )}
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -240,7 +253,11 @@ const TicketForm = ({ ticket, access, teamSpaceId, member }: Props) => {
               <FormItem className="col-span-full">
                 <FormLabel>Title</FormLabel>
                 <FormControl>
-                  <Input placeholder="Add ticket title" {...field} />
+                  <Input
+                    placeholder="Add ticket title"
+                    {...field}
+                    disabled={isDemoTicket}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -257,6 +274,7 @@ const TicketForm = ({ ticket, access, teamSpaceId, member }: Props) => {
                   <Textarea
                     placeholder="Tell us something about the ticket"
                     className="resize-none"
+                    disabled={isDemoTicket}
                     {...field}
                   />
                 </FormControl>

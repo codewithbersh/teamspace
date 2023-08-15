@@ -14,6 +14,7 @@ import { useAcceptMemberModal } from "@/hooks/use-accept-member-modal";
 import { useRemoveMemberModal } from "@/hooks/use-remove-member-modal";
 import { MoreHorizontal } from "lucide-react";
 import { Member } from "@/types";
+import { DEMO_ACCOUNTS } from "@/lib/demo-tickets";
 
 type Props = {
   row: Row<Member>;
@@ -37,6 +38,8 @@ export function ColumnsActionCell({ row }: Props) {
     onOpenRemove();
   };
 
+  const rowIsDemoAccount = DEMO_ACCOUNTS.includes(row.original.user);
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -52,7 +55,7 @@ export function ColumnsActionCell({ row }: Props) {
           {isPending ? "Accept member" : "Mark as pending"}
         </DropdownMenuItem>
         <DropdownMenuItem
-          disabled={isAdmin}
+          disabled={isAdmin || rowIsDemoAccount}
           onSelect={() => handleSelectRemoveMember()}
         >
           {isPending ? "Remove request" : "Remove member"}

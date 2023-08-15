@@ -6,9 +6,12 @@ import { DialogModal } from "./dialog-modal";
 import { DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 import { deleteTicket } from "@/lib/axios/ticket";
 import { useDeleteTicketModal } from "@/hooks/use-delete-ticket-modal";
+import { DEMO_TICKETS } from "@/lib/demo-tickets";
+import { AlertCircle } from "lucide-react";
 
 const DeleteTicketModal = () => {
   const { onClose, isOpen, ticket, setTicket } = useDeleteTicketModal();
@@ -33,6 +36,8 @@ const DeleteTicketModal = () => {
     "This action will result in the permanent removal of the ticket, including its complete history and associated comments. Are you certain you wish to proceed?";
 
   const acceptButtonText = "Yes, Delete";
+
+  const isDemoTicket = DEMO_TICKETS.includes(ticket.id);
 
   const handleSelectAccept = () => {
     if (!session) redirect("/login");
@@ -69,11 +74,26 @@ const DeleteTicketModal = () => {
       description={description}
     >
       <div className="pt-2">
+        {isDemoTicket && (
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Heads up!</AlertTitle>
+            <AlertDescription>
+              You are trying to delete a demo ticket. Demo tickets cannot be
+              deleted.
+            </AlertDescription>
+          </Alert>
+        )}
+
         <DialogFooter>
           <Button variant="outline" onClick={() => handleSelectCancel()}>
             Cancel
           </Button>
-          <Button variant="destructive" onClick={() => handleSelectAccept()}>
+          <Button
+            variant="destructive"
+            onClick={() => handleSelectAccept()}
+            disabled={isDemoTicket}
+          >
             {acceptButtonText}
           </Button>
         </DialogFooter>
