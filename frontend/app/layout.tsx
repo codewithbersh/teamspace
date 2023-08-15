@@ -1,8 +1,6 @@
 import "@/styles/globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-// eslint-disable-next-line import/no-unresolved
-import { Analytics } from "@vercel/analytics/react";
 
 import Providers from "@/components/providers/providers";
 import { Toaster } from "@/components/ui/toaster";
@@ -28,7 +26,6 @@ export default function RootLayout({
           <Providers>{children}</Providers>
           <Toaster />
         </div>
-        <Analytics />
       </body>
     </html>
   );
