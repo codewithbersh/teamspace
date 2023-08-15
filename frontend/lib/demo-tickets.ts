@@ -14,4 +14,5 @@ export const DEMO_TICKETS = [
 export const DEMO_ACCOUNTS = [
   "adf5a8d1-b977-4baf-abf6-91999660af1e",
   "48ec679c-47fa-43ed-a3bc-6a0e15380362",
+  "795b8972-7871-4fcf-9b06-662034d4f4cd",
 ];

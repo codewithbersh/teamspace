@@ -38,8 +38,6 @@ export function ColumnsActionCell({ row }: Props) {
     onOpenRemove();
   };
 
-  const rowIsDemoAccount = DEMO_ACCOUNTS.includes(row.original.user);
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -55,7 +53,7 @@ export function ColumnsActionCell({ row }: Props) {
           {isPending ? "Accept member" : "Mark as pending"}
         </DropdownMenuItem>
         <DropdownMenuItem
-          disabled={isAdmin || rowIsDemoAccount}
+          disabled={isAdmin}
           onSelect={() => handleSelectRemoveMember()}
         >
           {isPending ? "Remove request" : "Remove member"}
