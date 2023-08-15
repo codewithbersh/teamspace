@@ -256,7 +256,7 @@ const TicketForm = ({ ticket, access, teamSpaceId, member }: Props) => {
                   <Input
                     placeholder="Add ticket title"
                     {...field}
-                    disabled={isDemoTicket}
+                    disabled={member.role !== "SU" && isDemoTicket}
                   />
                 </FormControl>
                 <FormMessage />
@@ -274,7 +274,7 @@ const TicketForm = ({ ticket, access, teamSpaceId, member }: Props) => {
                   <Textarea
                     placeholder="Tell us something about the ticket"
                     className="resize-none"
-                    disabled={isDemoTicket}
+                    disabled={member.role !== "SU" && isDemoTicket}
                     {...field}
                   />
                 </FormControl>
