@@ -56,6 +56,7 @@ Team Space is a web-based project management application designed to streamline 
 ### Frontend:
 
 - **Framework**: TypeScript-powered React, developed using the NextJS framework. Built on NextJS version `13.4`.
+- **Deployment**: Frontend is hosted on [https://vercel.com](https://vercel.com/).
 - **Authentication**: Frontend authentication handled using NextAuth, utilizing both Google Provider and Credentials Provider.
 - **Form Management**: React-Hook-Forms integrated with ZOD and TypeScript for efficient form validations.
 - **HTTP Client**: Axios for making HTTP requests.
