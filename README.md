@@ -68,4 +68,4 @@ Team Space is a web-based project management application designed to streamline 
 - **CSS Framework**: Tailwind CSS.
 - **UI Component Library**: ShadCN UI – a set of reusable UI components, built upon RADIX UI and Tailwind CSS.
 - **Icons**: Leveraged Lucide-React and Radix UI Icons.
-- **Design Tool**: High-fidelity and low-fidelity wireframes and mockups crafted using Figma.
+- **Design Tool**: High-fidelity and low-fidelity wireframes and mockups crafted using Figma. [View in Figma](https://www.figma.com/file/kN00BA9TDNWaN7NTrBE0fY/Team-Space?type=design&node-id=0%3A1&mode=design&t=P9PNRvqVDXhjDh4P-1).
